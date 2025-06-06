@@ -1,0 +1,257 @@
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+
+  <!-- Full Page Loader -->
+  <div *ngIf="loading" class="loader-overlay">
+    <div
+      class="spinner-border text-primary"
+      style="width: 3rem; height: 3rem"
+      role="status"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="content" [class.blur]="loading">
+    <div class="pb-6">
+      <!-- <div id="lealsTable" data-list='{"valueNames":["name","email","phone","contact","company","date"],"page":10,"pagination":true}'> -->
+      <div id="lealsTable">
+        <div class="row g-3 justify-content-between mb-4">
+          <div class="col-auto">
+            <div class="d-md-flex justify-content-between">
+              <div>
+                <a [routerLink]="'/create-tax'"
+                  ><button class="btn btn-primary me-4">
+                    <span class="fas fa-plus me-2"></span>Create Tax
+                  </button></a
+                ><button class="btn btn-link text-body px-0">
+                  <span class="fa-solid fa-file-export fs-9 me-2"></span>Export
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="d-flex">
+              <div class="search-box me-2">
+                <form class="position-relative">
+                  <input
+                    class="form-control search-input search"
+                    type="search"
+                    placeholder="Search by tax Code"
+                    aria-label="Search"
+                  />
+                  <span class="fas fa-search search-box-icon"></span>
+                </form>
+              </div>
+              <div class="flatpickr-input-container me-2">
+                <input
+                  class="form-control ps-6 datetimepicker"
+                  id="datepicker"
+                  type="text"
+                  data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'
+                /><span
+                  class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"
+                ></span>
+              </div>
+              <button
+                class="btn px-3 btn-phoenix-secondary"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#filterModal"
+                data-boundary="window"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-bs-reference="parent"
+              >
+                <span
+                  class="fa-solid fa-filter text-primary"
+                  data-fa-transform="down-3"
+                ></span>
+              </button>
+              <div class="modal fade" id="filterModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content border border-translucent">
+                    <form id="addEventForm" autocomplete="off">
+                      <div
+                        class="modal-header border-translucent p-4 justify-content-between"
+                      >
+                        <h5 class="modal-title text-body-highlight fs-6 lh-sm">
+                          Filter
+                        </h5>
+                        <button
+                          class="btn p-1 text-danger"
+                          type="button"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span class="fas fa-times fs-9"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body pt-4 pb-2 px-4">
+                        <div class="mb-3">
+                          <label
+                            class="fw-bold mb-2 text-body-highlight"
+                            for="leadStatus"
+                            >Lead Status</label
+                          ><select class="form-select" id="leadStatus">
+                            <option value="newLead" selected="selected">
+                              New Lead
+                            </option>
+                            <option value="coldLead">Cold Lead</option>
+                            <option value="wonLead">Won Lead</option>
+                            <option value="canceled">Canceled</option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label
+                            class="fw-bold mb-2 text-body-highlight"
+                            for="createDate"
+                            >Create Date</label
+                          ><select class="form-select" id="createDate">
+                            <option value="today" selected="selected">
+                              Today
+                            </option>
+                            <option value="last7Days">Last 7 Days</option>
+                            <option value="last30Days">Last 30 Days</option>
+                            <option value="chooseATimePeriod">
+                              Choose a time period
+                            </option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label
+                            class="fw-bold mb-2 text-body-highlight"
+                            for="designation"
+                            >Designation</label
+                          ><select class="form-select" id="designation">
+                            <option value="VPAccounting" selected="selected">
+                              VP Accounting
+                            </option>
+                            <option value="ceo">CEO</option>
+                            <option value="creativeDirector">
+                              Creative Director
+                            </option>
+                            <option value="accountant">Accountant</option>
+                            <option value="executiveManager">
+                              Executive Manager
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div
+                        class="modal-footer d-flex justify-content-end align-items-center px-4 pb-4 border-0 pt-3"
+                      >
+                        <button
+                          class="btn btn-sm btn-phoenix-primary px-4 fs-10 my-0"
+                          type="submit"
+                        >
+                          <span class="fas fa-arrows-rotate me-2 fs-10"></span
+                          >Reset</button
+                        ><button
+                          class="btn btn-sm btn-primary px-9 fs-10 my-0"
+                          type="submit"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive scrollbar mx-n1 px-1">
+          <table
+            class="table fs-9 mb-0 leads-table border-top border-translucent"
+          >
+            <thead>
+              <tr>
+                <th style="width: 10%">S.No.</th>
+                <th>Name</th>
+                <th>Tax Percentage</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody class="list" id="leal-tables-body">
+              <tr *ngFor="let tax of taxList; index as i">
+                <td
+                  class="order align-middle white-space-nowrap py-0"
+                  style="width: 10%"
+                >
+                  <a class="fw-semibold">{{ i + 1 }}</a>
+                </td>
+                <td>{{ tax.taxName }}</td>
+                <td>{{ tax.taxPercentage }}%</td>
+                <td>
+                  <ng-container *ngIf="tax.isActive; else inactiveBadge">
+                    <span
+                      class="badge badge-phoenix fs-10 badge-phoenix-success"
+                      >Active</span
+                    >
+                  </ng-container>
+
+                  <ng-template #inactiveBadge>
+                    <span
+                      class="badge badge-phoenix fs-10 badge-phoenix-secondary"
+                      >Inactive</span
+                    >
+                  </ng-template>
+                </td>
+
+                <td
+                  class="align-middle text-end white-space-nowrap pe-0 action"
+                  style="width: 10px"
+                >
+                  <div class="d-flex justify-content-end align-items-center">
+                    <a
+                      [routerLink]="['/create-tax', tax.taxGuid]"
+                      class="btn btn-sm btn-phoenix-secondary me-2"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title="Edit"
+                      ><span class="fas fa-edit"></span
+                    ></a>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!taxList.length && !loading">
+                <td colspan="4" class="text-center">No records found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row align-items-center justify-content-end py-4 pe-0 fs-9">
+          <div class="col-auto d-flex">
+            <p
+              class="mb-0 d-none d-sm-block me-3 fw-semibold text-body"
+              data-list-info="data-list-info"
+            ></p>
+            <a class="fw-semibold" href="#!" data-list-view="*"
+              >View all<span
+                class="fas fa-angle-right ms-1"
+                data-fa-transform="down-1"
+              ></span></a
+            ><a class="fw-semibold d-none" href="#!" data-list-view="less"
+              >View Less<span
+                class="fas fa-angle-right ms-1"
+                data-fa-transform="down-1"
+              ></span
+            ></a>
+          </div>
+          <div class="col-auto d-flex">
+            <button class="page-link" data-list-pagination="prev">
+              <span class="fas fa-chevron-left"></span>
+            </button>
+            <ul class="mb-0 pagination"></ul>
+            <button class="page-link pe-0" data-list-pagination="next">
+              <span class="fas fa-chevron-right"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</main>

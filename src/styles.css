@@ -1,0 +1,10 @@
+@import '../node_modules/ngx-toastr/toastr.css';
+
+.success {
+    background-color: green !important;
+  }
+  
+  .error {
+    background-color: red !important;
+  }
+  

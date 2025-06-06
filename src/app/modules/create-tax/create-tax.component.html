@@ -1,0 +1,66 @@
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+  <div class="content">
+    <div class="pb-6">
+      <div
+        class="border-bottom border-translucent mb-2 mx-n3 px-2 mx-lg-n6 px-lg-6"
+      >
+        <div class="row">
+          <div class="col-xl-10">
+            <div class="d-sm-flex justify-content-between">
+              <h4 class="mb-4">
+                {{ tax.taxGuid ? "Update" : "Create" }} Tax Master
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form class="row g-3" (ngSubmit)="onSubmit()" #taxForm="ngForm">
+        <div class="col-md-4">
+          <label class="form-label" for="taxName">Tax Name</label>
+          <input
+            class="form-control"
+            id="taxName"
+            name="taxName"
+            type="text"
+            [(ngModel)]="tax.taxName"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="taxPercentage">Tax %</label>
+          <input
+            class="form-control"
+            id="taxPercentage"
+            name="taxPercentage"
+            type="number"
+            [(ngModel)]="tax.taxPercentage"
+            required
+          />
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              id="isActive"
+              name="isActive"
+              type="checkbox"
+              [(ngModel)]="tax.isActive"
+            />
+            <label class="form-check-label" for="isActive">Is Active</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit" [disabled]="loading">
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+            {{ tax.taxId ? "Update" : "Submit" }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</main>
