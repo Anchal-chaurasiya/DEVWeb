@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "eway-bill-app": {
+    "devweb": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,8 +13,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-              "baseHref": "/eway-bill-app/",
-            "outputPath": "dist/eway-bill-app",
+              "baseHref": "/",
+            "outputPath": "dist/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "eway-bill-app:build:production"
+              "buildTarget": "devweb:build:production"
             },
             "development": {
-              "buildTarget": "eway-bill-app:build:development"
+              "buildTarget": "devweb:build:development"
             }
           },
           "defaultConfiguration": "development"
