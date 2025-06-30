@@ -10,13 +10,16 @@
   }
   
   export interface LoginResponse {
-   userguid: string,
-    userId:number ,
+    userguid: string,
+    userId:number,
     userCode: string,
     userName:string,
     email: string,
     mobileNo:string,
     token:string,
+    companyCount: number,
+    isSingleUser: boolean,
+    mCompanyGuid: string,
   }
 
   

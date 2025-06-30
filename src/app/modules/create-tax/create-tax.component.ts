@@ -4,7 +4,7 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { TaxMaster } from '../../models/taxmaster.model';
 import { ApiService } from '../../services/api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { FormsModule } from '@angular/forms';
 import { CommonReqDto, CommonResDto } from '../../models/common.model';
@@ -12,7 +12,7 @@ import { CommonReqDto, CommonResDto } from '../../models/common.model';
 @Component({
   selector: 'app-create-tax',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent,FormsModule],
+  imports: [CommonModule, NavbarComponent, FooterComponent,FormsModule,RouterModule],
   templateUrl: './create-tax.component.html',
   styleUrl: './create-tax.component.css'
 })
@@ -20,7 +20,7 @@ export class CreateTaxComponent implements OnInit {
   tax: TaxMaster = { taxName: '', taxPercentage: 0, isActive: true,remarks:"",taxGuid:null };
   taxGuid: string| null = null;
   loading = false;
-
+  isActiveDisabled = true;
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -32,11 +32,13 @@ export class CreateTaxComponent implements OnInit {
     this.taxGuid = this.route.snapshot.paramMap.get('taxGuid');
     if (this.taxGuid) {
       this.loading = true;
+      this.isActiveDisabled = false;
       const gettaxreqdto= {
         CompanyId: 1,  
+        mCompanyGuid:localStorage.getItem("mCompanyGuid"),
         PageSize: 1,
         PageRecordCount: 10,
-        UserId: 1,
+        UserId: parseInt(localStorage.getItem("userId") || '0', 10),
         Data: this.taxGuid
       }
       this.apiService.post<CommonResDto<TaxMaster>>(`Tax/GetTaxService`,gettaxreqdto).subscribe({
@@ -50,6 +52,10 @@ export class CreateTaxComponent implements OnInit {
         }
       });
     }
+    else{
+      this.tax.isActive = true;
+      this.isActiveDisabled = true;
+    }
   }
 
   onSubmit() {
@@ -61,16 +67,21 @@ export class CreateTaxComponent implements OnInit {
 
   const reqBody: CommonReqDto<TaxMaster> = {
     CompanyId: 1,
+    mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
     PageSize: 0,
     PageRecordCount: 0,
     Data: this.tax,
-    UserId: 1
+    UserId: parseInt(localStorage.getItem("userId") || '0', 10),
   };
+
+ 
 
   if (this.taxGuid) {
     // Update
     this.apiService.post<CommonResDto<TaxMaster>>('Tax/UpdateTaxService', reqBody).subscribe({
       next: (response) => {
+        console.log(reqBody);
+        console.log(response);
         if (response.flag === 1) {
           this.toast.success(response.message);
           this.router.navigate(['/tax']);
@@ -86,7 +97,7 @@ export class CreateTaxComponent implements OnInit {
     });
   } else {
     // Create
-    this.apiService.post<CommonResDto<TaxMaster>>('Tax/AddTax', reqBody).subscribe({
+    this.apiService.post<CommonResDto<TaxMaster>>('Tax/AddTaxService', reqBody).subscribe({
       next: (response) => {
         if (response.flag === 1) {
           this.toast.success(response.message);

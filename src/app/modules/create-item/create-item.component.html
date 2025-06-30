@@ -1,0 +1,185 @@
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+  <div class="content">
+    <div class="pb-6">
+      <div
+        class="border-bottom border-translucent mb-2 mx-n3 px-2 mx-lg-n6 px-lg-6"
+      >
+        <div class="row">
+          <div class="col-xl-10">
+            <div class="d-sm-flex justify-content-between">
+              <h4 class="mb-4">
+                {{ item.itemGuid ? "Update" : "Create" }} Item
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form class="row g-3" (ngSubmit)="onSubmit()" #itemForm="ngForm">
+        <div class="col-md-4">
+          <label class="form-label" for="code">Item Code</label>
+          <input
+            class="form-control"
+            id="code"
+            name="code"
+            type="text"
+            [(ngModel)]="item.itemCode"
+            required
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="itemname">Item Name</label>
+          <input
+            class="form-control"
+            id="name"
+            name="name"
+            type="text"
+            [(ngModel)]="item.itemName"
+            required
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="description">Item Description</label>
+          <input
+            class="form-control"
+            id="description"
+            name="description"
+            type="text"
+            [(ngModel)]="item.description"
+            required
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="itemGroupId">Item Group</label>
+          <ng-select
+            [items]="itemGroups"
+            bindLabel="itemGroupName"
+            bindValue="itemGroupId"
+            placeholder="🔍 Type or select Item Group"
+            [(ngModel)]="item.itemGroupId"
+            [searchable]="true"
+            [clearable]="true"
+            [loading]="loadingItemGroups"
+            id="itemGroupId"
+            name="itemGroupId"
+            class="form-control custom-ng-select"
+            [ngClass]="{
+              'is-invalid': itemForm.submitted && !item.itemGroupId
+            }"
+          >
+            <ng-template ng-label-tmp let-item="item">
+              <span class="fw-semibold text-primary">{{
+                item.itemGroupName
+              }}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <span>{{ item.itemGroupName }}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="taxId">Tax</label>
+          <ng-select
+            [items]="taxes"
+            bindLabel="taxName"
+            bindValue="taxId"
+            placeholder="🔍 Type or select Tax"
+            [(ngModel)]="item.taxId"
+            [searchable]="true"
+            [clearable]="true"
+            [loading]="loadingTaxes"
+            id="taxId"
+            name="taxId"
+            class="form-control custom-ng-select"
+            [ngClass]="{
+              'is-invalid': itemForm.submitted && !item.taxId
+            }"
+          >
+            <ng-template ng-label-tmp let-item="item">
+              <span class="fw-semibold text-primary">{{ item.taxName }}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <span>{{ item.taxName }}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="hsnCode">HSN Code</label>
+          <input
+            class="form-control"
+            id="hsnCode"
+            name="hsnCode"
+            type="text"
+            [(ngModel)]="item.hsnCode"
+            required
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="uomId">UOM</label>
+          <ng-select
+            [items]="uomes"
+            bindLabel="uomName"
+            bindValue="uomId"
+            placeholder="🔍 Type or select UOM"
+            [(ngModel)]="item.uomId"
+            [searchable]="true"
+            [clearable]="true"
+            [loading]="loadingUOM"
+            id="uomId"
+            name="uomId"
+            class="form-control custom-ng-select"
+            [ngClass]="{
+              'is-invalid': itemForm.submitted && !item.uomId
+            }"
+          >
+            <ng-template ng-label-tmp let-item="item">
+              <span class="fw-semibold text-primary">{{ item.uomName }}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <span>{{ item.uomName }}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <div class="col-4">
+          <label class="form-label" for="status">Status</label>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              id="isActive"
+              name="isActive"
+              type="checkbox"
+              [(ngModel)]="item.isActive"
+              [disabled]="isActiveDisabled"
+            />
+            <label class="form-check-label" for="isActive">Is Active</label>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit" [disabled]="loading">
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+            {{ item.itemGuid ? "Update" : "Submit" }}
+          </button>
+
+          <button
+            class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0 ml-2"
+            type="button"
+            [routerLink]="['/item']"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</main>

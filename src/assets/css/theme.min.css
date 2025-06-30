@@ -3352,7 +3352,7 @@ progress {
   border-color: var(--phoenix-table-border-color);
 }
 .table > :not(caption) > * > * {
-  padding: .2rem 0rem;
+  padding: .2rem 1rem;
   color: var(--phoenix-table-color-state, var(--phoenix-table-color-type, var(--phoenix-table-color)));
   background-color: var(--phoenix-table-bg);
   border-bottom-width: var(--phoenix-border-width);
@@ -24058,9 +24058,9 @@ fieldset:disabled .table-list .page,
 /*                                    Logo                                    */
 /* -------------------------------------------------------------------------- */
 .logo-text {
-  font-size: 1.63625rem;
-  color: var(--phoenix-logo-text);
-  font-weight: 600;
+  font-size: 1rem;
+  color: rgb(15 151 232);
+  font-weight: 800;
   letter-spacing: -0.04em;
   margin-bottom: 0;
 }
@@ -38265,4 +38265,28 @@ top: 100%;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+
+.ml-2{margin-left:2%;}
+
+/* Attractive ng-select styles */
+.custom-ng-select {
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+.custom-ng-select .ng-dropdown-panel {
+  border-radius: 0.7rem;
+  box-shadow: 0 6px 24px rgba(13,110,253,0.13);
+  background: #fff;
+  margin-top: .6rem;
+}
+.custom-ng-select .ng-option {
+  padding: .5rem .5rem;
+  /* font-size: 1.05rem; */
+  line-height: .9;
+}
+.custom-ng-select .ng-option-selected {
+  background: #e7f1ff;
+  color: #0d6efd;
 }

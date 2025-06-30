@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly baseUrl = "https://localhost:7266/api";
+  private readonly baseUrl = //"http://68.178.164.44:84/api";
+  "https://localhost:7266/api";
 
   constructor(private http: HttpClient) {}
 

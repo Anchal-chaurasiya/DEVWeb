@@ -26,12 +26,12 @@ constructor(
  ngOnInit() {
     this.loading = true;
    
-    const reqData=
-    {
+    const reqData={
       CompanyId: 1,  
+      mCompanyGuid:localStorage.getItem("mCompanyGuid"),
       PageSize: 1,
       PageRecordCount: 10,
-      UserId: 1,
+      UserId: parseInt(localStorage.getItem("userId") || '0', 10),
       Data: 1
     };
     this.apiService.post<CommonResDto<TaxMaster[]>>('Tax/GetTaxListService', reqData).subscribe({

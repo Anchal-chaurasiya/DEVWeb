@@ -1,5 +1,6 @@
  export interface CommonReqDto<T>{
     CompanyId: number;
+    mCompanyGuid : string | null;
     PageSize: number;
     PageRecordCount: number;
     UserId:number;

@@ -1,0 +1,12 @@
+<div *ngIf="showCompanyModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Select Company</h3>
+    <select [(ngModel)]="selectedCompany">
+      <option [ngValue]="null">-- Select Company --</option>
+      <option *ngFor="let c of companyList" [ngValue]="c">
+        {{ c.companyName }}
+      </option>
+    </select>
+    <button (click)="onCompanySelect()">Proceed</button>
+  </div>
+</div>

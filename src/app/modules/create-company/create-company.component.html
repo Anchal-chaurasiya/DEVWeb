@@ -1,0 +1,458 @@
+<main class="main" id="top">
+  <section
+    class="py-0"
+    style="border-bottom: 1px solid #cbd0dd; background: white"
+  >
+    <div class="container-small">
+      <div class="ecommerce-topbar">
+        <nav class="navbar navbar-expand-lg navbar-light px-0">
+          <div class="row gx-0 gy-2 w-100 flex-between-center">
+            <div class="col-auto">
+              <a class="text-decoration-none">
+                <div class="d-flex align-items-center">
+                  <img
+                    src="../../../assets/img/icons/logo.png"
+                    alt="DIVIKA IT & DIGITAL SERVICES"
+                    width="27"
+                  />
+                  <h5 class="logo-text ms-2">DIVIKA IT & DIGITAL SERVICES</h5>
+                </div>
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <!-- end of .container-->
+  </section>
+
+  <section class="pt-5 pb-9">
+    <div class="container-small">
+      <div class="row justify-content-between">
+        <div class="col-lg-12 col-xl-12">
+          <form class="row g-3" (ngSubmit)="onSubmit()" #companyForm="ngForm">
+            <h3 class="mb-5">Create Company</h3>
+            <div class="row g-4 mb-7">
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtcompanyName"
+                  >Company Name</label
+                ><input
+                  class="form-control"
+                  id="txtcompanyName"
+                  name="txtcompanyName"
+                  [(ngModel)]="company.companyName"
+                  placeholder="Enter Company Name"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtmobileno"
+                  >Mobile No</label
+                ><input
+                  class="form-control"
+                  id="txtmobileno"
+                  name="txtmobileno"
+                  [(ngModel)]="company.mobileNo"
+                  placeholder="Enter Mobile No"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtemail"
+                  >Email</label
+                ><input
+                  class="form-control"
+                  id="txtemail"
+                  name="txtemail"
+                  [(ngModel)]="company.emailId"
+                  placeholder="Enter Email Id"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtgstn"
+                  >GSTN</label
+                ><input
+                  class="form-control"
+                  id="txtgstn"
+                  name="txtgstn"
+                  [(ngModel)]="company.gstn"
+                  placeholder="Enter GSTN"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtTIN"
+                  >TIN</label
+                ><input
+                  class="form-control"
+                  id="txtTIN"
+                  name="txtTIN"
+                  [(ngModel)]="company.tin"
+                  placeholder="Enter TIN"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtPAN"
+                  >PAN</label
+                ><input
+                  class="form-control"
+                  id="txtPAN"
+                  name="txtPAN"
+                  [(ngModel)]="company.pan"
+                  placeholder="Enter PAN"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtBAddress"
+                  >Billing Address 1</label
+                ><input
+                  class="form-control"
+                  id="txtBAddress"
+                  name="txtBAddress"
+                  [(ngModel)]="company.bAddress"
+                  placeholder="Enter Billing Address 1"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtBAddress2"
+                  >Billing Address 2</label
+                ><input
+                  class="form-control"
+                  id="txtBAddress2"
+                  name="txtBAddress2"
+                  [(ngModel)]="company.bAddress2"
+                  placeholder="Enter Billing Address 2"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="selectCompany"
+                  >Billing Address Country</label
+                >
+                <select
+                  class="form-select"
+                  [(ngModel)]="company.bCountryId"
+                  name="selectCompany"
+                  (change)="loadStatesForAddress(company)"
+                >
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let c of country" [value]="c.countryId">
+                    {{ c.countryName }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="selectState"
+                  >Billing Address State</label
+                >
+                <select
+                  class="form-select"
+                  [(ngModel)]="company.bStateId"
+                  name="selectState"
+                >
+                  <option value="" disabled>Select</option>
+                  <option
+                    *ngFor="let s of company.states || []"
+                    [value]="s.stateId"
+                  >
+                    {{ s.stateName }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtBCity"
+                  >Billing Address City</label
+                ><input
+                  class="form-control"
+                  id="txtBCity"
+                  name="txtBCity"
+                  [(ngModel)]="company.bCity"
+                  placeholder="Enter Billing Address City"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtBzipCode"
+                  >Billing ZipCode</label
+                ><input
+                  class="form-control"
+                  id="txtBzipCode"
+                  name="txtBzipCode"
+                  [(ngModel)]="company.bZipCode"
+                  placeholder="Enter Billing ZipCode"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtBzipCode"
+                  >Billing ZipCode 2</label
+                ><input
+                  class="form-control"
+                  id="txtBzipCode2"
+                  name="txtBzipCode2"
+                  [(ngModel)]="company.bZipCode1"
+                  placeholder="Enter Billing ZipCode 2"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtSAddress"
+                  >Shipping Address 1</label
+                ><input
+                  class="form-control"
+                  id="txtSAddress"
+                  name="txtSAddress"
+                  [(ngModel)]="company.sAddress1"
+                  placeholder="Enter Shipping Address 1"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtSAddress2"
+                  >Shipping Address 2</label
+                ><input
+                  class="form-control"
+                  id="txtSAddress2"
+                  name="txtSAddress2"
+                  [(ngModel)]="company.sAddress2"
+                  placeholder="Enter Shipping Address 2"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="selectSCountry"
+                  >Shipping Address Country</label
+                >
+                <select
+                  class="form-select"
+                  [(ngModel)]="company.sCountryId"
+                  name="selectSCountry"
+                  (change)="loadStatesForAddressS(company)"
+                >
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let c of country" [value]="c.countryId">
+                    {{ c.countryName }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="selectSState"
+                  >Shipping Address State</label
+                >
+                <select
+                  class="form-select"
+                  [(ngModel)]="company.sStateId"
+                  name="selectSState"
+                >
+                  <option value="" disabled>Select</option>
+                  <option
+                    *ngFor="let s of company.sstates || []"
+                    [value]="s.stateId"
+                  >
+                    {{ s.stateName }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtSCity"
+                  >Shipping Address City</label
+                ><input
+                  class="form-control"
+                  id="txtSCity"
+                  name="txtSCity"
+                  [(ngModel)]="company.sCity"
+                  placeholder="Enter Shipping Address City"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtBankName"
+                  >Bank Name</label
+                ><input
+                  class="form-control"
+                  id="txtBankName"
+                  name="txtBankName"
+                  [(ngModel)]="company.bankName"
+                  placeholder="Enter Bank Name"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtAccountHolderName"
+                  >Account Holder Name</label
+                ><input
+                  class="form-control"
+                  id="txtAccountHolderName"
+                  name="txtAccountHolderName"
+                  [(ngModel)]="company.accountHolderName"
+                  placeholder="Enter Account Holder Name"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtAccountNo"
+                  >Account No</label
+                ><input
+                  class="form-control"
+                  id="txtAccountNo"
+                  name="txtAccountNo"
+                  [(ngModel)]="company.accountNo"
+                  placeholder="Enter Account No"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtIFSCCode"
+                  >IFSC Code</label
+                ><input
+                  class="form-control"
+                  id="txtIFSCCode"
+                  name="txtIFSCCode"
+                  [(ngModel)]="company.ifscCode"
+                  placeholder="Enter IFSC Code"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtAccountType"
+                  >Account Type</label
+                ><input
+                  class="form-control"
+                  id="txtAccountType"
+                  name="txtAccountType"
+                  [(ngModel)]="company.accountType"
+                  placeholder="Enter Account Type"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtSwiftCode"
+                  >Swift Code</label
+                ><input
+                  class="form-control"
+                  id="txtSwiftCode"
+                  name="txtSwiftCode"
+                  [(ngModel)]="company.swiftCode"
+                  placeholder="Enter Swift Code"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="txtUPIId"
+                  >UPI Id</label
+                ><input
+                  class="form-control"
+                  id="txtUPIId"
+                  name="txtUPIId"
+                  [(ngModel)]="company.upiId"
+                  placeholder="Enter UPI Id"
+                />
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  class="form-label fs-8 text-body-highlight ps-0 text-transform-none"
+                  for="isActive"
+                  >Status</label
+                >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    id="isActive"
+                    name="isActive"
+                    type="checkbox"
+                    [(ngModel)]="company.isActive"
+                    [disabled]="isActiveDisabled"
+                  />
+                  <label class="form-check-label" for="isActive"
+                    >Is Active</label
+                  >
+                </div>
+              </div>
+
+              <div class="col-12">
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                  [disabled]="loading"
+                >
+                  <span
+                    *ngIf="loading"
+                    class="spinner-border spinner-border-sm me-2"
+                  ></span>
+                  {{ company.companyGuid ? "Update" : "Submit" }}
+                </button>
+
+                <button
+                  class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0 ml-2"
+                  type="button"
+                  [routerLink]="['/login']"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

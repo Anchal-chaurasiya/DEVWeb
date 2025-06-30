@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-              "baseHref": "/",
+            "baseHref": "/",
             "outputPath": "dist/",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -32,9 +32,7 @@
               "node_modules/ngx-toastr/toastr.css",
               "src/styles.css"
             ],
-            "scripts": [
-             
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -88,17 +86,13 @@
                 "glob": "**/*",
                 "input": "public"
               },
-                 "src/assets"
+              "src/assets"
             ],
             "styles": [
-            "node_modules/ngx-toastr/toastr.css",
-            "src/styles.css"
-            
+              "node_modules/ngx-toastr/toastr.css",
+              "src/styles.css"
             ],
-            "scripts":
-            [ 
-              
-          ]
+            "scripts": []
           }
         }
       }

@@ -46,6 +46,7 @@
               name="isActive"
               type="checkbox"
               [(ngModel)]="tax.isActive"
+              [disabled]="isActiveDisabled"
             />
             <label class="form-check-label" for="isActive">Is Active</label>
           </div>
@@ -57,6 +58,14 @@
               class="spinner-border spinner-border-sm me-2"
             ></span>
             {{ tax.taxId ? "Update" : "Submit" }}
+          </button>
+
+          <button
+            class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0 ml-2"
+            type="button"
+            [routerLink]="['/tax']"
+          >
+            Cancel
           </button>
         </div>
       </form>

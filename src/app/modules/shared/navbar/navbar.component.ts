@@ -1,48 +1,45 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { ToastService } from '../../../services/toast.service';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from '../../../models/menu.model';
-import { CommonResDto } from '../../../models/common.model';
+import { MenuService } from '../../../services/menu.service'; // <-- import
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
-  standalone:true,
-  imports: [CommonModule,RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isShow = false;
-   constructor(private apiService: ApiService, private router: Router,
-    private toast: ToastService
-  ) {}  
- menuTree: MenuItem[] = [];
+  menuTree: MenuItem[] = [];
+
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private toast: ToastService,
+    private menuService: MenuService // <-- inject
+  ) {}
+
   ngOnInit() {
-    const menuStr = localStorage.getItem('userMenu');
-    if (menuStr) {
-      const menuArr: MenuItem[] = JSON.parse(menuStr);
-      this.menuTree = menuArr;
-    }
-    else{
-      this.toast.warning("Menu not found, please login again");
-     // this.router.navigate(['/login']);
-    }
-  }
- 
+    // Subscribe to menu changes from MenuService
+    this.menuService.menu$.subscribe(menu => {
+      this.menuTree = menu;
+    });
 
-  
-  
+    // Load menu from storage if available (for page refresh)
+    this.menuService.loadMenuFromStorage();
+  }
+
   logout() {
-      localStorage.removeItem('authToken');
-      this.toast.success("logout successfully");
-      this.router.navigate(['/login']); 
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userMenu');
+    this.menuService.setMenu([]); // Clear menu in service
+    this.toast.success("Logout successfully");
+    this.router.navigate(['/login']);
   }
-
-
- 
 }
-
-

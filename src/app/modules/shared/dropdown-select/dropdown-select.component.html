@@ -1,0 +1,17 @@
+<div>
+  <input
+    class="form-control mb-1"
+    [(ngModel)]="searchText"
+    [placeholder]="'Search ' + placeholder"
+  />
+  <select
+    class="form-select"
+    [(ngModel)]="model"
+    (ngModelChange)="onChange($event)"
+  >
+    <option [ngValue]="null">{{ placeholder }}</option>
+    <option *ngFor="let item of mappedItems" [ngValue]="item.value">
+      {{ item.label }}
+    </option>
+  </select>
+</div>

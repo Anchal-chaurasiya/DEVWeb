@@ -1,0 +1,404 @@
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+  <div class="content">
+    <div class="pb-6">
+      <div
+        class="border-bottom border-translucent mb-2 mx-n3 px-2 mx-lg-n6 px-lg-6"
+      >
+        <div class="row">
+          <div class="col-xl-10">
+            <div class="d-sm-flex justify-content-between">
+              <h4 class="mb-4">
+                {{ customer.customerGuid ? "Update" : "Create" }} Customer
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form class="row g-3" (ngSubmit)="onSubmit()" #customerForm="ngForm">
+        <div class="col-md-4">
+          <label class="form-label">Customer Code</label>
+          <input
+            class="form-control"
+            [(ngModel)]="customer.customerCode"
+            name="customerCode"
+            required
+            disabled
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Customer Name</label>
+          <input
+            class="form-control"
+            [(ngModel)]="customer.customerName"
+            name="customerName"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Email</label>
+          <input
+            class="form-control"
+            [(ngModel)]="customer.email"
+            name="email"
+            type="email"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Mobile</label>
+          <input
+            class="form-control"
+            [(ngModel)]="customer.mobile"
+            name="mobile"
+          />
+        </div>
+        <div class="col-md-4" hidden>
+          <label class="form-label">GSTN</label>
+          <input class="form-control" [(ngModel)]="customer.gstn" name="gstn" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Status</label>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              id="isActive"
+              name="isActive"
+              type="checkbox"
+              [(ngModel)]="customer.isActive"
+              [disabled]="isActiveDisabled"
+            />
+            <label class="form-check-label" for="isActive">Is Active</label>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card shadow-sm border rounded mb-4">
+            <div class="card-header bg-light border-bottom">
+              <h5 class="mb-0">Addresses</h5>
+            </div>
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <ul class="nav nav-tabs" id="addressTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      [class.active]="activeTab === 'bill'"
+                      (click)="activeTab = 'bill'"
+                      type="button"
+                      role="tab"
+                      aria-controls="bill"
+                      [attr.aria-selected]="
+                        activeTab === 'bill' ? 'true' : 'false'
+                      "
+                    >
+                      Bill to Address
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      [class.active]="activeTab === 'ship'"
+                      (click)="activeTab = 'ship'"
+                      type="button"
+                      role="tab"
+                      aria-controls="ship"
+                      [attr.aria-selected]="
+                        activeTab === 'ship' ? 'true' : 'false'
+                      "
+                    >
+                      Ship to Address
+                    </button>
+                  </li>
+                </ul>
+                <div>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="addAddress(activeTab === 'bill' ? '1' : '2')"
+                  >
+                    {{
+                      activeTab === "bill"
+                        ? "Add Bill to Address"
+                        : "Add Ship to Address"
+                    }}
+                  </button>
+                </div>
+              </div>
+              <div class="tab-content" id="addressTabsContent">
+                <!-- Bill to Address Tab -->
+                <div
+                  class="tab-pane fade"
+                  [class.show]="activeTab === 'bill'"
+                  [class.active]="activeTab === 'bill'"
+                  *ngIf="activeTab === 'bill'"
+                  id="bill"
+                  role="tabpanel"
+                  aria-labelledby="bill-tab"
+                >
+                  <div class="table-responsive scrollbar mx-n1 px-1">
+                    <table
+                      class="table fs-9 mb-0 leads-table border-top border-translucent"
+                    >
+                      <thead class="table-light">
+                        <tr>
+                          <th>Address Line 1</th>
+                          <th>Address Line 2</th>
+                          <th>Country</th>
+                          <th>State</th>
+                          <th>City</th>
+                          <th>GSTN</th>
+                          <th>Zip Code</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="list" id="leal-tables-body">
+                        <tr
+                          *ngFor="let address of billAddresses; let i = index"
+                        >
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.addressLine1"
+                              name="bill_addressLine1{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.addressLine2"
+                              name="bill_addressLine2{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <select
+                              class="form-select"
+                              (change)="loadStatesForAddress(address)"
+                              [(ngModel)]="address.countryId"
+                              name="bill_country{{ i }}"
+                              required
+                            >
+                              <option value="" disabled>Select</option>
+                              <option
+                                *ngFor="let c of country"
+                                [value]="c.countryId"
+                              >
+                                {{ c.countryName }}
+                              </option>
+                            </select>
+                          </td>
+                          <td>
+                            <select
+                              class="form-select"
+                              [(ngModel)]="address.stateId"
+                              name="bill_state{{ i }}"
+                              required
+                            >
+                              <option value="" disabled>Select</option>
+                              <option
+                                *ngFor="let s of address.states || []"
+                                [value]="s.stateId"
+                              >
+                                {{ s.stateName }}
+                              </option>
+                            </select>
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.city"
+                              name="bill_city{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.gstn"
+                              name="bill_gstn{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.zipCode"
+                              name="bill_zipCode{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <button
+                              class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
+                              (click)="removeAddressByType('1', i)"
+                              title="Remove"
+                            >
+                              <!-- SVG icon here -->
+                              <svg
+                                aria-hidden="true"
+                                focusable="false"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 448 512"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                                />
+                              </svg>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- Ship to Address Tab -->
+                <div
+                  class="tab-pane fade"
+                  [class.show]="activeTab === 'ship'"
+                  [class.active]="activeTab === 'ship'"
+                  *ngIf="activeTab === 'ship'"
+                  id="ship"
+                  role="tabpanel"
+                  aria-labelledby="ship-tab"
+                >
+                  <div class="table-responsive scrollbar mx-n1 px-1">
+                    <table
+                      class="table fs-9 mb-0 leads-table border-top border-translucent"
+                    >
+                      <thead class="table-light">
+                        <tr>
+                          <th>Address Line 1</th>
+                          <th>Address Line 2</th>
+                          <th>Country</th>
+                          <th>State</th>
+                          <th>City</th>
+                          <th>GSTN</th>
+                          <th>Zip Code</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="list" id="leal-tables-body">
+                        <tr
+                          *ngFor="let address of shipAddresses; let i = index"
+                        >
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.addressLine1"
+                              name="ship_addressLine1{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.addressLine2"
+                              name="ship_addressLine2{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <select
+                              class="form-select"
+                              (change)="loadStatesForAddress(address)"
+                              [(ngModel)]="address.countryId"
+                              name="ship_country{{ i }}"
+                              required
+                            >
+                              <option value="" disabled>Select</option>
+                              <option
+                                *ngFor="let c of country"
+                                [value]="c.countryId"
+                              >
+                                {{ c.countryName }}
+                              </option>
+                            </select>
+                          </td>
+                          <td>
+                            <select
+                              class="form-select"
+                              [(ngModel)]="address.stateId"
+                              name="ship_state{{ i }}"
+                              required
+                            >
+                              <option value="" disabled>Select</option>
+                              <option
+                                *ngFor="let s of address.states || []"
+                                [value]="s.stateId"
+                              >
+                                {{ s.stateName }}
+                              </option>
+                            </select>
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.city"
+                              name="ship_city{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.gstn"
+                              name="ship_gstn{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              class="form-control"
+                              [(ngModel)]="address.zipCode"
+                              name="ship_zipCode{{ i }}"
+                            />
+                          </td>
+                          <td>
+                            <button
+                              class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
+                              (click)="removeAddressByType('2', i)"
+                              title="Remove"
+                            >
+                              <!-- SVG icon here -->
+                              <svg
+                                aria-hidden="true"
+                                focusable="false"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 448 512"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                                />
+                              </svg>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit" [disabled]="loading">
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+            {{ customerGuid ? "Update Customer" : "Save Customer" }}
+          </button>
+
+          <button
+            class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0 ml-2"
+            type="button"
+            [routerLink]="['/customer']"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</main>

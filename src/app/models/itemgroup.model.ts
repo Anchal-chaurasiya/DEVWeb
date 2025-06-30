@@ -1,8 +1,8 @@
 export interface ItemGroup{
-    ItemGroupGuid?: string;
-    ItemGroupId?: number;
-    ItemGroupName: string;
-    Description?: string;
+    itemGroupGuid: string | null;
+    itemGroupId?: number;
+    itemGroupName: string;
+    description: string;
     isActive: boolean;
-    remarks?: string;
+    remarks: string;
 };
