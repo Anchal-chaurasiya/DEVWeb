@@ -10,3 +10,14 @@ isActive: boolean;
 remarks: string;
 uomId: number | null;
 }
+
+export interface ItemDropdownResDto{
+itemId: number;
+itemGuid: string | null;        
+itemCode: string;
+itemName: string;
+hsnCode: string | null;
+taxId: number | null;
+taxName: string | null;
+taxPercentage: number ;
+} 

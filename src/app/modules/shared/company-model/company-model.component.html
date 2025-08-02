@@ -1,12 +1,39 @@
-<div *ngIf="showCompanyModal" class="modal-overlay">
-  <div class="modal-content">
-    <h3>Select Company</h3>
-    <select [(ngModel)]="selectedCompany">
-      <option [ngValue]="null">-- Select Company --</option>
-      <option *ngFor="let c of companyList" [ngValue]="c">
-        {{ c.companyName }}
-      </option>
-    </select>
-    <button (click)="onCompanySelect()">Proceed</button>
+<div
+  class="modal fade show"
+  tabindex="-1"
+  [ngClass]="{ 'd-block': showCompanyModal }"
+  *ngIf="showCompanyModal"
+  style="background: rgba(0, 0, 0, 0.5)"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Company</h5>
+      </div>
+      <div class="modal-body">
+        <div *ngFor="let c of companyList" class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="companyRadio"
+            [value]="c"
+            [(ngModel)]="selectedCompany"
+            [id]="'company-' + c.companyGuid"
+          />
+          <label class="form-check-label" [for]="'company-' + c.companyGuid">
+            {{ c.companyName }}
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onCompanySelect()"
+        >
+          Proceed
+        </button>
+      </div>
+    </div>
   </div>
 </div>

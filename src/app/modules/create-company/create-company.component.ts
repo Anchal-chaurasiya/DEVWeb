@@ -65,11 +65,12 @@ ngOnInit() {
       if (!keepSelected) company.bStateId = null;
       return;
     }
-    const StateReqDto = {
-      CompanyId: 1,
+    const StateReqDto : CommonReqDto<number> = {
+      mCompanyGuid:localStorage.getItem("mCompanyGuid"),
+      companyGuid: localStorage.getItem("CompanyGuid"),
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      PageSize: 0,
-      PageRecordCount: 0,
+      PageSize: 1,
+      PageRecordCount: 1000,
       Data: company.bCountryId
     };
     this.dropdownData.getDropdownDataByParam<State>('State/GetStateDropDownService', StateReqDto)
@@ -97,8 +98,9 @@ ngOnInit() {
       if (!skeepSelected) company.sStateId = null;
       return;
     }
-    const StateReqDto = {
-      CompanyId: 1,
+    const StateReqDto: CommonReqDto<number> = {
+      mCompanyGuid:localStorage.getItem("mCompanyGuid"),
+      companyGuid: localStorage.getItem("CompanyGuid"),
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
       PageSize: 0,
       PageRecordCount: 0,
@@ -131,8 +133,8 @@ ngOnInit() {
     this.company.remarks = "";
   }
   const reqBody: CommonReqDto<CompanyDto> = {
-    CompanyId: 1,
     mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
+    companyGuid: localStorage.getItem("mCompanyGuid") || null,
     PageSize: 0,
     PageRecordCount: 0,
     Data: this.company,

@@ -1,3 +1,4 @@
+import { BaseDto } from "./base.model";
 import { State } from "./state.model";
 
 export class CustomerVendorResponseDto {
@@ -13,7 +14,7 @@ export class CustomerVendorResponseDto {
   remarks: string | null = null;
 }
 
-export interface CustomerVendorAddress {
+export interface CustomerVendorAddress  extends BaseDto{
   addressGuid: string | null ;
   addressType: string;
   addressLine1: string;
@@ -28,7 +29,7 @@ export interface CustomerVendorAddress {
   gstn?: string | null;
 }
 
-export interface CustomerVendorRequestDto {
+export interface CustomerVendorRequestDto extends BaseDto {
   customerGuid: string | null;
   customerId: number;
   customerCode: string;
@@ -38,6 +39,42 @@ export interface CustomerVendorRequestDto {
   gstn: string | "";
   Remarks: string;
   CustomerType: string;
-   isActive: boolean;
+  shippingTermType:Number | null,
+  paymentTermType:Number | null,
+  shippingTermTypeName?: string;  
+  paymentTermTypeName?: string;
+  contactPersonName?:string;
+  contachPersonNo?:string;
+  contachPersonEmail?:string;
+  gsttype:string;
   addresses: CustomerVendorAddress[];
+}
+
+export interface CustomerVendorListResDto {
+  customerId: number;
+  customerGuid: string | null;
+  customerName: string;
+  shippingTermId: number | null;
+  shippingTerm: string | null;
+  paymentTermId: number | null;
+  paymentTerm: string | null;
+}
+
+export interface CustomerVendorListReqDto {
+  CustomerType: string;
+}
+
+export interface CustomerVendorListAddressReqDto{
+  customerGuid: string;
+}
+
+export interface CustomerVendorListAddressResDto{
+  addressId: number;
+  addressType: string;
+  address: string;
+  city: string;
+  stateId: number | null;
+  stateName: string;
+  countryId: number | null;
+  addressTypeName: string ; 
 }

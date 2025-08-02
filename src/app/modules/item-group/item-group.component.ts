@@ -7,7 +7,7 @@ import { ItemGroup } from '../../models/itemgroup.model';
 import { ApiService } from '../../services/api.service';
 import { Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
-import { CommonResDto } from '../../models/common.model';
+import { CommonReqDto, CommonResDto } from '../../models/common.model';
 
 @Component({
   selector: 'app-item-group',
@@ -27,16 +27,16 @@ loading: boolean = false;
 
   ngOnInit() {
     this.loading = true;
-    const reqData=
+    const reqData: CommonReqDto<number> =
     {
-      CompanyId: 1,  
+      companyGuid:localStorage.getItem("CompanyGuid") || null,
       mCompanyGuid:localStorage.getItem("mCompanyGuid"),
       PageSize: 1,
-
-      PageRecordCount: 10,
+      PageRecordCount: 1000,
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      Data: 1
+      Data: parseInt(localStorage.getItem("userId") || '0', 10),
     };
+    
     this.apiService.post<CommonResDto<ItemGroup[]>>('ItemGroup/GetItemGroupListService', reqData).subscribe({
       next: (response) => {
         this.loading = false;

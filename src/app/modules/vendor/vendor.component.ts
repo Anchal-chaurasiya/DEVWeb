@@ -3,7 +3,7 @@ import { CustomerVendorResponseDto } from '../../models/customervender.model';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { Router, RouterModule } from '@angular/router';
-import { CommonResDto } from '../../models/common.model';
+import { CommonReqDto, CommonResDto } from '../../models/common.model';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
@@ -26,12 +26,12 @@ export class VendorComponent {
 
   ngOnInit() {
     this.loading = true;
-    const reqData=
+    const reqData:CommonReqDto<number>=
     {
-      CompanyId: 1,  
+      companyGuid:localStorage.getItem("CompanyGuid"),
       mCompanyGuid:localStorage.getItem("mCompanyGuid"),
       PageSize: 1,
-      PageRecordCount: 10,
+      PageRecordCount: 1000,
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
       Data: 2
     };

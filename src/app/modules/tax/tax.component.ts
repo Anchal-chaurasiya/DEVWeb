@@ -6,7 +6,7 @@ import { ApiService } from '../../services/api.service';
 import { Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { TaxMaster } from '../../models/taxmaster.model';
-import { CommonResDto } from '../../models/common.model';
+import { CommonReqDto, CommonResDto } from '../../models/common.model';
 
 @Component({
   selector: 'app-tax',
@@ -26,13 +26,13 @@ constructor(
  ngOnInit() {
     this.loading = true;
    
-    const reqData={
-      CompanyId: 1,  
+    const reqData: CommonReqDto<number>={
+      companyGuid:localStorage.getItem("CompanyGuid"),
       mCompanyGuid:localStorage.getItem("mCompanyGuid"),
       PageSize: 1,
       PageRecordCount: 10,
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      Data: 1
+      Data: parseInt(localStorage.getItem("userId") || '0', 10),
     };
     this.apiService.post<CommonResDto<TaxMaster[]>>('Tax/GetTaxListService', reqData).subscribe({
       next: (response) => {

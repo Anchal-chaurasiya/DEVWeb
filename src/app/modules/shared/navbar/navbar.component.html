@@ -106,6 +106,19 @@
           </div>
         </div>
       </a>
+
+      <a class="navbar-brand me-1 me-sm-3">
+        <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center">
+            <h5
+              *ngIf="companyName"
+              class="company-text ms-12 d-none d-sm-block"
+            >
+              Selected Company : {{ companyName }}
+            </h5>
+          </div>
+        </div>
+      </a>
     </div>
 
     <ul class="navbar-nav navbar-nav-icons flex-row">

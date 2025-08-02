@@ -9,15 +9,15 @@ import { MenuItem } from '../../models/menu.model';
 import { MenuService } from '../../services/menu.service';
 import { UserContextService } from '../../services/usercontext.service';
 import { CompanyDto } from '../../models/company.model';
-import { CommonResDto } from '../../models/common.model';
 import { CompanyModelComponent } from '../shared/company-model/company-model.component';
+import { CommonReqDto } from '../../models/common.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [FormsModule, CommonModule, CompanyModelComponent]
+  imports: [FormsModule, CommonModule]
 })
 export class LoginComponent {
   username: string = '';
@@ -25,9 +25,7 @@ export class LoginComponent {
   error: string = '';
   loading: boolean = false;
 
-  showCompanyModal = false;
-  companyList: CompanyDto[] = [];
-  selectedCompany: CompanyDto | null = null;
+  
   loginResponse: LoginResponse | null = null;
 
   constructor(
@@ -38,7 +36,12 @@ export class LoginComponent {
     private userContext: UserContextService
   ) {}
 
+  ngonit() {
+    this.userContext.clearUser();
+  }
+
   onLogin() {
+    this.userContext.clearUser();
     this.error = '';
     if (!this.username || !this.password) {
       this.error = 'Username and password are required';
@@ -57,13 +60,14 @@ export class LoginComponent {
         if (response.token != null) {
           this.toast.success('Login Successfully');
           localStorage.setItem('authToken', response.token);
-          this.userContext.setUser(response.userId, response.userName, response.mCompanyGuid);
-
+          localStorage.setItem('mCompanyGuid', response.mCompanyGuid);
+          localStorage.setItem('userId', response.userId.toString());
+          localStorage.setItem('userName', response.userName);
+          //this.userContext.setUser(response.userId, response.userName, response.mCompanyGuid);
+          this.fetchMenuDetails();
           if (response.companyCount == 0) {
             this.router.navigate(['/create-company']);
             return;
-          } else {
-            this.fetchCompanies();
           }
         } else {
           this.error = "Something went wrong, please contact the administrator";
@@ -77,27 +81,21 @@ export class LoginComponent {
     });
   }
 
-  onCompanySelect(selectedCompany: CompanyDto) {
-    if (!selectedCompany) {
-      this.toast.warning('Please select a company');
-      return;
-    }
-    this.selectedCompany = selectedCompany;
+  fetchMenuDetails(){
+    const menureqdata: CommonReqDto<number> = {  
+            mCompanyGuid: localStorage.getItem('mCompanyGuid') || '',
+            companyGuid: localStorage.getItem('mCompanyGuid') || '',
+            PageSize: 1,
+            PageRecordCount: 1000,
+            UserId: localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : 0,
+            Data: localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : 0,
+          };
 
-    const menureqdata = {
-      CompanyId: selectedCompany.companyId,
-      mCompanyGuid: this.userContext.mCompanyGuid,
-      PageSize: 1,
-      PageRecordCount: 10,
-      UserId: this.userContext.userId || 0,
-      Data: this.userContext.userId || 0
-    };
     this.apiService.post<MenuItem[]>('Menu/GetUserMenuListService', menureqdata).subscribe(res => {
       if (res) {
         const menuTree = this.buildMenuTree(res);
         this.menuService.setMenu(menuTree);
       }
-      this.showCompanyModal = false;
       this.router.navigate(['/dashboard']);
     });
   }
@@ -123,30 +121,5 @@ export class LoginComponent {
     return roots;
   }
 
-  fetchCompanies() {
-       const reqData={
-         CompanyId: 1,  
-         mCompanyGuid:this.userContext.mCompanyGuid ,
-         PageSize: 1,
-         PageRecordCount: 10,
-         UserId: this.userContext.userId || 0,
-         Data: this.userContext.userId || 0
-       };
-       this.apiService.get<CompanyDto[]>('Company/GetCompanyDropdownService', reqData).subscribe({
-         next: (companies) => {
-           this.loading = false;
-           if (companies!== null ) {
-             this.companyList = companies;
-             this.showCompanyModal = true;
-             this.selectedCompany = null;
-           } else {
-             this.companyList = [];
-             this.toast.warning('No Company records found');
-           }
-         },
-         error: (error) => {
-           this.toast.warning('Unable to fetch companies');
-         }
-       }); 
-  }
+  
 }

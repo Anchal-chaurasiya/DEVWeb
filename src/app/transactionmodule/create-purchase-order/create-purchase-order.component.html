@@ -1,0 +1,716 @@
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+  <div class="content">
+    <div class="">
+      <div class="card shadow-lg border-0 mb-4">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h4 class="mb-0">
+            <i class="bi bi-cart-plus me-2"></i>
+            Create Purchase Order
+          </h4>
+          <span class="badge bg-light text-primary fs-8 px-3 py-2">
+            PO #{{ purchaseOrder.purchaseOrderNo || "New" }}
+          </span>
+        </div>
+        <div class="card-body">
+          <form
+            class="row g-4"
+            #purchaseorderForm="ngForm"
+            (ngSubmit)="onSubmit()"
+          >
+            <div class="col-md-3">
+              <label class="form-label" for="vendorId">Vendor</label>
+
+              <select
+                class="form-select"
+                [(ngModel)]="purchaseOrder.vendorGuid"
+                name="vendorGuid"
+                (ngModelChange)="onVendorChange($event)"
+                required
+              >
+                <option value="" disabled>Select</option>
+                <option *ngFor="let c of vendorList" [value]="c.customerGuid">
+                  {{ c.customerName }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Contact Person Name</label>
+              <input
+                class="form-control"
+                name="contactPersonName"
+                [(ngModel)]="purchaseOrder.contactPersonName"
+                disabled
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Contact Person Number</label>
+              <input
+                class="form-control"
+                name="contachPersonNo"
+                [(ngModel)]="purchaseOrder.contachPersonNo"
+                disabled
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Contact Person Email</label>
+              <input
+                class="form-control"
+                name="contachPersonEmail"
+                [(ngModel)]="purchaseOrder.contachPersonEmail"
+                disabled
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Reference Number</label>
+              <input
+                class="form-control"
+                name="refNo"
+                [(ngModel)]="purchaseOrder.refNo"
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Place Of Supply</label>
+              <input
+                class="form-control"
+                name="placeOfSupply"
+                disabled
+                [(ngModel)]="purchaseOrder.placeOfSupply"
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold" for="purchaseOrderDate">
+                <i class="bi bi-calendar-date me-1"></i>Purchase Order Date
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="purchaseOrder.purchaseOrderDate"
+                name="purchaseOrderDate"
+                id="purchaseOrderDate"
+                required
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label fw-bold" for="deliveryDate">
+                <i class="bi bi-calendar-date me-1"></i>Delivery Date
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="purchaseOrder.deliveryDate"
+                name="deliveryDate"
+                id="deliveryDate"
+                required
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Shipping Term</label>
+              <input
+                class="form-control"
+                [value]="selectedVendor?.shippingTerm"
+                readonly
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Payment Term</label>
+              <input
+                class="form-control"
+                [value]="selectedVendor?.paymentTerm"
+                readonly
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Address</label>
+              <input
+                class="form-control"
+                name="address"
+                [value]="this.vendoraddress ?? ''"
+                disabled
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="addressId">Billing Address</label>
+              <select
+                class="form-select"
+                [(ngModel)]="purchaseOrder.addressId"
+                name="addressId"
+                (ngModelChange)="onAddressChange($event)"
+                required
+              >
+                <!-- <option value="" disabled>Select</option> -->
+                <option
+                  *ngFor="let a of billingCompanyAddressList"
+                  [value]="a.addressId"
+                  selected
+                >
+                  {{ a.address }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Company Shipping Address</label>
+              <input
+                class="form-control"
+                name="companySAddressname"
+                [value]="this.companySAddressname ?? ''"
+                disabled
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Purchase Type</label>
+              <div class="mb-3 d-flex gap-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="purchaseType"
+                    [(ngModel)]="purchaseOrder.purchaseType"
+                    (change)="onPurchaseTypeChange(purchaseOrder)"
+                    (mousedown)="onRadioMouseDown(purchaseOrder)"
+                    id="item"
+                    value="Item"
+                  />
+                  <label
+                    class="form-check-label fs-8 text-body"
+                    for="item"
+                    style="width: max-content"
+                  >
+                    Item
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="purchaseType"
+                    (change)="onPurchaseTypeChange(purchaseOrder)"
+                    [(ngModel)]="purchaseOrder.purchaseType"
+                    (mousedown)="onRadioMouseDown(purchaseOrder)"
+                    id="service"
+                    value="Service"
+                  />
+                  <label
+                    class="form-check-label fs-8 text-body"
+                    for="service"
+                    style="width: max-content"
+                  >
+                    Service
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Items Card -->
+            <div class="col-12">
+              <div class="card mb-3">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <span><i class="bi bi-box-seam me-2"></i>Items</span>
+                  <button
+                    type="button"
+                    class="btn btn-primary me-4"
+                    (click)="addItem()"
+                  >
+                    <svg
+                      class="svg-inline--fa fa-plus me-2"
+                      aria-hidden="true"
+                      focusable="false"
+                      data-prefix="fas"
+                      data-icon="plus"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="card-body p-2">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th
+                            *ngIf="
+                              purchaseOrder.purchaseType == 'Item' ||
+                              purchaseOrder.purchaseType == ''
+                            "
+                          >
+                            Item Name
+                          </th>
+                          <th *ngIf="purchaseOrder.purchaseType == 'Service'">
+                            Item Description
+                          </th>
+                          <th>Quantity</th>
+                          <th>Price</th>
+                          <th>Discount (%)</th>
+                          <th>Discount Amt</th>
+                          <th *ngIf="isIntraState">CGST Rate</th>
+                          <th *ngIf="isIntraState">CGST Amt</th>
+                          <th *ngIf="isIntraState">SGST Rate</th>
+                          <th *ngIf="isIntraState">SGST Amt</th>
+
+                          <!-- Show IGST only if inter-state -->
+                          <th *ngIf="!isIntraState">IGST Rate</th>
+                          <th *ngIf="!isIntraState">IGST Amt</th>
+                          <th>Total Amount</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let item of purchaseOrder.purchaseOrderDetailReqDtos;
+                            let i = index
+                          "
+                        >
+                          <td
+                            *ngIf="
+                              purchaseOrder.purchaseType == 'Item' ||
+                              purchaseOrder.purchaseType == ''
+                            "
+                          >
+                            <select
+                              style="width: 200px"
+                              class="form-select"
+                              [(ngModel)]="item.itemGuid"
+                              name="itemId{{ i }}"
+                              (ngModelChange)="onItemChange(item, i)"
+                              required
+                            >
+                              <option value="" disabled>Select</option>
+                              <option
+                                *ngFor="let _i of itemList"
+                                [value]="_i.itemGuid"
+                              >
+                                {{ _i.itemName }}
+                              </option>
+                            </select>
+                          </td>
+
+                          <td *ngIf="purchaseOrder.purchaseType == 'Service'">
+                            <input
+                              style="width: 100px"
+                              type="text"
+                              class="form-control"
+                              name="itemdescription{{ i }}"
+                              [(ngModel)]="item.itemdescription"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              style="width: 100px"
+                              type="number"
+                              class="form-control"
+                              name="itemQty{{ i }}"
+                              required
+                              min="1"
+                              [(ngModel)]="item.qty"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control"
+                              style="width: 100px"
+                              [(ngModel)]="item.price"
+                              name="itemPrice{{ i }}"
+                              required
+                              min="0"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control"
+                              style="width: 100px"
+                              [(ngModel)]="item.discountPercentage"
+                              name="itemDiscountPercent{{ i }}"
+                              min="0"
+                              max="100"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.discountAmount"
+                              name="itemDiscountAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+                          <td *ngIf="isIntraState">
+                            <input
+                              style="width: 100px"
+                              type="number"
+                              class="form-control"
+                              [(ngModel)]="item.cgstRate"
+                              name="itemCgstRate{{ i }}"
+                              min="0"
+                              max="100"
+                              readonly
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td *ngIf="isIntraState">
+                            <input
+                              style="width: 100px"
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.cgstAmount"
+                              name="itemCgstAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <!-- SGST fields (show only for intra-state) -->
+                          <td *ngIf="isIntraState">
+                            <input
+                              type="number"
+                              class="form-control"
+                              [(ngModel)]="item.sgstRate"
+                              name="itemSgstRate{{ i }}"
+                              min="0"
+                              max="100"
+                              style="width: 100px"
+                              readonly
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td *ngIf="isIntraState">
+                            <input
+                              type="number"
+                              style="width: 100px"
+                              class="form-control bg-light"
+                              [value]="item.sgstAmount"
+                              name="itemSgstAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <!-- IGST fields (show only for inter-state) -->
+                          <td *ngIf="!isIntraState">
+                            <input
+                              type="number"
+                              class="form-control"
+                              [(ngModel)]="item.igstRate"
+                              name="itemIgstRate{{ i }}"
+                              min="0"
+                              max="100"
+                              style="width: 100px"
+                              readonly
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td *ngIf="!isIntraState">
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.igstAmount"
+                              style="width: 100px"
+                              name="itemIgstAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.totalAmount"
+                              style="width: 100px"
+                              name="itemTotalAmount{{ i }}"
+                              readonly
+                            />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              [disabled]="
+                                purchaseOrder.purchaseOrderDetailReqDtos
+                                  .length === 1
+                              "
+                              title="Remove"
+                              class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                focusable="false"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 448 512"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                                ></path>
+                              </svg>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payments Card -->
+            <div class="col-12">
+              <div class="card mb-3">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <span
+                    ><i class="bi bi-credit-card-2-front me-2"></i
+                    >Payments</span
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-primary me-4"
+                    (click)="addPayment()"
+                  >
+                    <svg
+                      class="svg-inline--fa fa-plus me-2"
+                      aria-hidden="true"
+                      focusable="false"
+                      data-prefix="fas"
+                      data-icon="plus"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                      ></path>
+                    </svg>
+                    Add
+                  </button>
+                </div>
+                <div class="card-body p-0">
+                  <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Payment Mode</th>
+                        <th>Amount</th>
+                        <th>Reference</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let pay of purchaseOrder.purchaseOrderPaymentReqDtos;
+                          let j = index
+                        "
+                      >
+                        <td>
+                          <select
+                            class="form-select"
+                            [(ngModel)]="pay.paymentMode"
+                            name="payMode{{ j }}"
+                          >
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Cheque">Cheque</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="pay.amount"
+                            name="payAmount{{ j }}"
+                            required
+                            min="0"
+                            (input)="updateSummary()"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="pay.refrenceNo"
+                            name="payRef{{ j }}"
+                            placeholder="Ref. No / UPI ID"
+                          />
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            (click)="removePayment(j)"
+                            [disabled]="
+                              purchaseOrder.purchaseOrderPaymentReqDtos
+                                .length === 1
+                            "
+                            title="Remove"
+                            class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              focusable="false"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 448 512"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                              ></path>
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="col-md-4 offset-md-8">
+              <div class="card mb-3 shadow-sm">
+                <div
+                  class="card-header bg-warning text-dark d-flex align-items-center"
+                >
+                  <i class="bi bi-receipt me-2 fs-5"></i>
+                  <span class="fw-bold fs-8">Order Summary</span>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex">
+                    <table class="table table-bordered mb-0">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <i class="bi bi-box me-1 text-info"></i>
+                            <strong>Total Items:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-info fs-8 px-2">{{
+                              purchaseOrder.purchaseOrderDetailReqDtos.length
+                            }}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <i
+                              class="bi bi-currency-rupee me-1 text-success"
+                            ></i>
+                            <strong>Total Amount:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-success fs-8 px-2"
+                              >₹ {{ purchaseOrder.totalAmount }}</span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <i class="bi bi-credit-card me-1 text-primary"></i>
+                            <strong>Total Paid:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-success fs-8 px-2"
+                              >₹ {{ totalPaid }}</span
+                            >
+                          </td>
+                        </tr>
+                        <tr *ngIf="totalPaid < purchaseOrder.totalAmount">
+                          <td>
+                            <i
+                              class="bi bi-exclamation-triangle me-1 text-warning"
+                            ></i>
+                            <strong>Due:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-warning text-dark px-3 py-2"
+                              >₹
+                              {{ purchaseOrder.totalAmount - totalPaid }}</span
+                            >
+                          </td>
+                        </tr>
+                        <tr *ngIf="totalPaid > purchaseOrder.totalAmount">
+                          <td>
+                            <i class="bi bi-check-circle me-1 text-success"></i>
+                            <strong>Status:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-danger px-3 py-2"
+                              >Extra Amount Paid</span
+                            >
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            totalPaid == purchaseOrder.totalAmount &&
+                            totalPaid > 0
+                          "
+                        >
+                          <td>
+                            <i class="bi bi-check-circle me-1 text-success"></i>
+                            <strong>Status:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-success px-3 py-2"
+                              >Total Amount Paid</span
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="col-12">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="loading"
+              >
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm me-2"
+                ></span>
+                Submit
+              </button>
+
+              <button
+                class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0 ml-2"
+                type="button"
+                [routerLink]="['/purchase-order']"
+              >
+                Cancel
+              </button>
+
+              <!-- <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Submit</button> -->
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <app-footer></app-footer>
+    </div>
+  </div>
+</main>

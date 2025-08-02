@@ -16,7 +16,7 @@
         </div>
       </div>
       <form class="row g-3" (ngSubmit)="onSubmit()" #vendorForm="ngForm">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label class="form-label">Vendor Code</label>
           <input
             class="form-control"
@@ -26,7 +26,7 @@
             disabled
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label class="form-label">Vendor Name</label>
           <input
             class="form-control"
@@ -35,7 +35,7 @@
             required
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label class="form-label">Email</label>
           <input
             class="form-control"
@@ -44,7 +44,7 @@
             type="email"
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label class="form-label">Mobile</label>
           <input
             class="form-control"
@@ -52,12 +52,85 @@
             name="mobile"
           />
         </div>
-        <div class="col-md-4" hidden>
+
+        <div class="col-md-3">
+          <label class="form-label">Payment Term</label>
+          <select
+            class="form-select"
+            [(ngModel)]="vendor.paymentTermType"
+            name="paymentTermType"
+            required
+          >
+            <option value="" disabled>Select</option>
+            <option
+              *ngFor="let s of paymentTermTypeList || []"
+              [value]="s.spTermId"
+            >
+              {{ s.spTerm }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Shippment Term</label>
+          <select
+            class="form-select"
+            [(ngModel)]="vendor.shippingTermType"
+            name="shippingTermType"
+            required
+          >
+            <option value="" disabled>Select</option>
+            <option
+              *ngFor="let s of shippmentTermTypeList || []"
+              [value]="s.spTermId"
+            >
+              {{ s.spTerm }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3" hidden>
           <label class="form-label">GSTN</label>
           <input class="form-control" [(ngModel)]="vendor.gstn" name="gstn" />
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
+          <label class="form-label">Contact Person Name</label>
+          <input
+            class="form-control"
+            [(ngModel)]="vendor.contactPersonName"
+            name="contactPersonName"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Contact Person Mobile No.</label>
+          <input
+            class="form-control"
+            [(ngModel)]="vendor.contachPersonNo"
+            name="contachPersonNo"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Contact Person Email</label>
+          <input
+            class="form-control"
+            [(ngModel)]="vendor.contachPersonEmail"
+            name="contachPersonEmail"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">GST Type</label>
+          <input
+            class="form-control"
+            [(ngModel)]="vendor.gsttype"
+            name="gsttype"
+          />
+        </div>
+
+        <div class="col-md-3">
           <label class="form-label">Status</label>
           <div class="form-check">
             <input
@@ -70,6 +143,21 @@
             />
             <label class="form-check-label" for="isActive">Is Active</label>
           </div>
+        </div>
+
+        <div class="form-check mb-2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="sameAsBilling"
+            [(ngModel)]="sameAsBilling"
+            (change)="copyBillingToShipping()"
+            name="sameAsBilling"
+            [disabled]="isEditMode"
+          />
+          <label class="form-check-label" for="sameAsBilling">
+            Same as billing address
+          </label>
         </div>
 
         <div class="col-12">

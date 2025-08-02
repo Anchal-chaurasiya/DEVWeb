@@ -7,12 +7,12 @@ import { CommonResDto } from '../models/common.model';
 export class DropdownDataService {
   constructor(private api: ApiService) {}
 
-  getDropdownData<T>(apiUrl: string): Observable<T[]> {
+getDropdownData<T>(apiUrl: string): Observable<T[]> {
     return this.api.get<T[]>(apiUrl);
   }
-
     // Generic POST method to get data by ID or any payload
  getDropdownDataByParam<T>(apiUrl: string, payload: any): Observable<CommonResDto<T[]>> {
   return this.api.post<CommonResDto<T[]>>(apiUrl, payload);
 }
+
 }

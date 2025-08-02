@@ -3,6 +3,15 @@
 
   <div class="content">
     <div class="row gy-3 mb-4 justify-content-between">
+      <!-- ...existing login form code... -->
+      <app-company-model
+        [showCompanyModal]="showCompanyModal"
+        [companyList]="companyList"
+        [(selectedCompany)]="selectedCompany"
+        (companySelected)="onCompanySelect()"
+      >
+      </app-company-model>
+
       <div class="col-xxl-6">
         <h2 class="mb-2 text-body-emphasis">CRM Dashboard</h2>
         <h5 class="text-body-tertiary fw-semibold mb-4">

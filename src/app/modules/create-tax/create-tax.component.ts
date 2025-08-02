@@ -33,8 +33,8 @@ export class CreateTaxComponent implements OnInit {
     if (this.taxGuid) {
       this.loading = true;
       this.isActiveDisabled = false;
-      const gettaxreqdto= {
-        CompanyId: 1,  
+      const gettaxreqdto: CommonReqDto<string> ={
+        companyGuid:localStorage.getItem("CompanyGuid"),
         mCompanyGuid:localStorage.getItem("mCompanyGuid"),
         PageSize: 1,
         PageRecordCount: 10,
@@ -66,7 +66,7 @@ export class CreateTaxComponent implements OnInit {
   this.loading = true;
 
   const reqBody: CommonReqDto<TaxMaster> = {
-    CompanyId: 1,
+    companyGuid:localStorage.getItem("CompanyGuid"),
     mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
     PageSize: 0,
     PageRecordCount: 0,

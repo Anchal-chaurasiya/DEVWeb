@@ -1,0 +1,358 @@
+<p>purchase-order works!</p>
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+
+  <!-- Full Page Loader -->
+  <div *ngIf="loading" class="loader-overlay">
+    <div
+      class="spinner-border text-primary"
+      style="width: 3rem; height: 3rem"
+      role="status"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="content" [class.blur]="loading">
+    <!-- <section> begin ============================-->
+
+    <div class="container-small">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <h4 class="mb-0">Purchase Order</h4>
+        <div>
+          <button class="btn btn-phoenix-secondary me-2">
+            <span class="fa-solid fa-download me-sm-2"></span
+            ><span class="d-none d-sm-inline-block"
+              >Download Purchase Order</span
+            ></button
+          ><button class="btn btn-phoenix-secondary">
+            <span class="fa-solid fa-print me-sm-2"></span
+            ><span class="d-none d-sm-inline-block">Print</span>
+          </button>
+        </div>
+      </div>
+      <div class="card mb-4 rounded-2">
+        <div class="card-body row g-4">
+          <div class="col-12 col-lg-12">
+            <table class="table table-bordered mb-0">
+              <tbody>
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Purchase Order No. </strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.purchaseOrderNo }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Order Date </strong>
+                  </td>
+                  <td>
+                    {{
+                      viewpurchaseorder.purchaseOrderDate | date : "dd-MM-yyyy"
+                    }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Delivery Date </strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.deliveryDate | date : "dd-MM-yyyy" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Customer Code:</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.customerCode }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Customer Name</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.customerName }}
+                  </td>
+
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Contact Person Name</strong>
+                  </td>
+                  <td>{{ viewpurchaseorder.contactPersonName }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Contact Person Email</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.contachPersonEmail }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Contact Person Number</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.contachPersonNo }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Reference No</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.refNo }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Place Of Order</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.placeOfSupply }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Shipping Term</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.shippingTerm }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Payment Term</strong>
+                  </td>
+                  <td>
+                    {{ viewpurchaseorder.paymentTerm }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Billing Address</strong>
+                  </td>
+                  <td colspan="5">
+                    {{ viewpurchaseorder.bAddress }}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Shipping Address</strong>
+                  </td>
+                  <td colspan="5">
+                    {{ viewpurchaseorder.sAddress }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Total Amount</strong>
+                  </td>
+                  <td colspan="3">
+                    {{ viewpurchaseorder.totalAmount }}
+                  </td>
+                  <td>
+                    <i class="bi bi-currency-rupee me-1 text-success"></i>
+                    <strong>Puchase Type</strong>
+                  </td>
+                  <td colspan="3">
+                    {{ viewpurchaseorder.purchaseType }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card px-0">
+        <div class="card-body p-2">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>S.No.</th>
+                  <th style="width: 200px">Item Name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Discount (%)</th>
+                  <th>Discount Amt</th>
+                  <th>CGST Rate</th>
+                  <th>CGST Amt</th>
+                  <th>SGST Rate</th>
+                  <th>SGST Amt</th>
+                  <th>IGST Rate</th>
+                  <th>IGST Amt</th>
+                  <!-- <th>Total Amount</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of viewpurchaseorder.items; let i = index">
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>
+                    {{ item.itemName }}
+                  </td>
+                  <td>
+                    {{ item.qty }}
+                  </td>
+                  <td>
+                    {{ item.price }}
+                  </td>
+                  <td>
+                    {{ item.discountPercentage }}
+                  </td>
+                  <td>
+                    {{ item.discountAmount }}
+                  </td>
+                  <td>
+                    {{ item.cgstRate }}
+                  </td>
+                  <td>
+                    {{ item.cgstAmount }}
+                  </td>
+
+                  <!-- SGST fields (show only for intra-state) -->
+                  <td>
+                    {{ item.sgstRate }}
+                  </td>
+                  <td>
+                    {{ item.sgstAmount }}
+                  </td>
+
+                  <!-- IGST fields (show only for inter-state) -->
+                  <td>
+                    {{ item.igstRate }}
+                  </td>
+                  <td>
+                    {{ item.igstAmount }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- <div class="table-responsive scrollbar">
+          <table class="table fs-9 text-body mb-0">
+            <thead class="bg-body-secondary">
+              <tr>
+                <th scope="col" style="width: 24px"></th>
+                <th scope="col" style="min-width: 60px">SL NO.</th>
+                <th scope="col" style="min-width: 360px">Products</th>
+                <th class="ps-5" scope="col" style="min-width: 150px">Color</th>
+                <th scope="col" style="width: 60px">Size</th>
+                <th class="text-end" scope="col" style="width: 80px">
+                  Quantity
+                </th>
+                <th class="text-end" scope="col" style="width: 100px">Price</th>
+                <th class="text-end" scope="col" style="width: 138px">
+                  Tax Rate
+                </th>
+                <th class="text-center" scope="col" style="width: 80px">
+                  Tax Type
+                </th>
+                <th class="text-end" scope="col" style="min-width: 92px">
+                  Tax
+                </th>
+                <th class="text-end" scope="col" style="min-width: 60px">
+                  Total
+                </th>
+                <th scope="col" style="width: 24px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border-0"></td>
+                <td class="align-middle">1</td>
+                <td class="align-middle">
+                  <p class="line-clamp-1 mb-0 fw-semibold">
+                    Fitbit Sense Advanced Smartwatch with Tools for Heart
+                    Health, Stress Management &amp; Skin Temperature Trends,
+                    Carbon/Graphite, One Size (S &amp; L Bands)
+                  </p>
+                </td>
+                <td class="align-middle ps-5">Glossy black</td>
+                <td class="align-middle text-body-tertiary fw-semibold">XL</td>
+                <td
+                  class="align-middle text-end text-body-highlight fw-semibold"
+                >
+                  2
+                </td>
+                <td class="align-middle text-end fw-semibold">$299</td>
+                <td class="align-middle text-end">2.5%</td>
+                <td class="align-middle text-center fw-semibold">VAT</td>
+                <td class="align-middle text-end fw-semibold">$199</td>
+                <td class="align-middle text-end fw-semibold">$398</td>
+                <td class="border-0"></td>
+              </tr>
+
+              <tr class="bg-body-secondary">
+                <td
+                  class="align-middle ps-4 fw-bold text-body-highlight"
+                  colspan="3"
+                >
+                  Grand Total
+                </td>
+                <td
+                  class="align-middle fw-bold text-body-highlight"
+                  colspan="7"
+                >
+                  Three Hundred and Ninenty Eight USD
+                </td>
+                <td class="align-middle text-end fw-bold">$398</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+      </div>
+
+      <div class="card px-0" style="margin-top: 2%">
+        <div class="card-body p-2">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>S.No.</th>
+                  <th>Paymemt Mpde</th>
+                  <th>Amount</th>
+                  <th>Reference No.</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let item of viewpurchaseorder.payments; let i = index"
+                >
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>
+                    {{ item.paymentMode }}
+                  </td>
+                  <td>
+                    {{ item.amount }}
+                  </td>
+                  <td>
+                    {{ item.refrenceNo }}
+                  </td>
+                  <td>
+                    {{ item.createdOn | date : "dd-MM-yyyy" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-footer></app-footer>
+  </div>
+</main>

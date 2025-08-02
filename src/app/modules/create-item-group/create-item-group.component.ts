@@ -29,18 +29,17 @@ export class CreateItemGroupComponent  implements OnInit {
   ) {}
 
   ngOnInit() {
-    debugger;
     this.itemGroupGuid = this.route.snapshot.paramMap.get('itemGroupGuid');
     if (this.itemGroupGuid) {
       this.loading = true;
       this.isActiveDisabled = false;
-      const getitemgroupreqDto= {
-        CompanyId: 1,  
-        mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
+      const getitemgroupreqDto: CommonReqDto<string>= {
+        companyGuid: localStorage.getItem("CompanyGuid"),
+        mCompanyGuid: localStorage.getItem("mCompanyGuid") || null,
         PageSize: 1,
-        PageRecordCount: 10,
+        PageRecordCount: 1000,
+        Data: this.itemGroupGuid,
         UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-        Data: this.itemGroupGuid
       }
       this.apiService.post<CommonResDto<ItemGroup>>(`ItemGroup/GetItemGroupService`,getitemgroupreqDto).subscribe({
         next: (response) => {
@@ -70,7 +69,7 @@ export class CreateItemGroupComponent  implements OnInit {
     this.itemgroup.remarks = "";
   }
   const reqBody: CommonReqDto<ItemGroup> = {
-    CompanyId: 1,
+    companyGuid:localStorage.getItem("CompanyGuid"),
     mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
     PageSize: 0,
     PageRecordCount: 0,

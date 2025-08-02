@@ -13,6 +13,9 @@ import { VendorComponent } from './modules/vendor/vendor.component';
 import { CreateCustomerComponent } from './modules/create-customer/create-customer.component';
 import { CreateVendorComponent } from './modules/create-vendor/create-vendor.component';
 import { CreateCompanyComponent } from './modules/create-company/create-company.component';
+import { CreatePurchaseOrderComponent } from './transactionmodule/create-purchase-order/create-purchase-order.component';
+import { PurchaseOrderComponent } from './transactionmodule/purchase-order/purchase-order.component';
+import { ViewPurchaseOrderComponent } from './transactionmodule/view-purchase-order/view-purchase-order.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -35,4 +38,7 @@ export const routes: Routes = [
   { path: 'create-vendor',component: CreateVendorComponent},
   { path: 'create-vendor/:customerGuid',component: CreateVendorComponent}, 
   { path: 'create-company',component: CreateCompanyComponent},
+  { path: 'purchase-order',component: PurchaseOrderComponent},
+  { path: 'create-purchase-order',component: CreatePurchaseOrderComponent},
+  { path: 'view-purchase-order/:purchaseGuid',component: ViewPurchaseOrderComponent},
 ];

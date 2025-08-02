@@ -10,7 +10,8 @@ import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomerVendorRequestDto, CustomerVendorAddress } from '../../models/customervender.model';
 import { State } from '../../models/state.model';
-import { CommonResDto } from '../../models/common.model';
+import { CommonReqDto, CommonResDto } from '../../models/common.model';
+import { SPTerm } from '../../models/spterm.model';
 
 @Component({
   selector: 'app-create-customer',
@@ -20,13 +21,22 @@ import { CommonResDto } from '../../models/common.model';
   styleUrl: './create-customer.component.css'
 })
 export class CreateCustomerComponent {
+  paymentTermTypeList:any[]=[];
+  shippmentTermTypeList:any[]=[];
   customer: CustomerVendorRequestDto = {} as CustomerVendorRequestDto;
   loading = false;
   customerGuid: string | null = null;
   activeTab: 'bill' | 'ship' = 'bill';
   country: any[] = [];
+  paymentTerms: any[] = [];
+  shippingTerms: any[] = [];
   loadingcountry = false;
   isActiveDisabled = true;
+  loadingPaymentTerm = false;
+  loadingShippmentTerm= false;
+  sameAsBilling = false;
+  billingAddress:any;
+  isEditMode: boolean = false;
   constructor(
     private dropdownData: DropdownDataService,
     private apiService: ApiService,
@@ -47,25 +57,83 @@ export class CreateCustomerComponent {
         this.loadingcountry = false;
       }
     });
+    
+   this.loadingPaymentTerm = true;
+    
+    const paymenttermreqdto: CommonReqDto<number> = {
+    companyGuid: localStorage.getItem("CompanyGuid") || null,
+    mCompanyGuid: localStorage.getItem("mCompanyGuid") || null,
+    PageSize: 1,
+    PageRecordCount: 1000,
+    UserId: parseInt(localStorage.getItem("userId") || '0', 10),
+    Data: 2,
+  };
+
+    this.dropdownData.getDropdownDataByParam<any>('SPTerm/GetSPTermListService',paymenttermreqdto).subscribe({
+      next: res => {
+        this.paymentTermTypeList = res.data;
+        this.loadingPaymentTerm = false;
+      },
+      error: () => {
+        this.loadingPaymentTerm = false;
+      }
+    });
+
+
+    this.loadingShippmentTerm = true;
+    
+    const shippmenttermreqdto: CommonReqDto<number> = {
+    companyGuid: localStorage.getItem("CompanyGuid") || null,
+    mCompanyGuid: localStorage.getItem("mCompanyGuid") || null,
+    PageSize: 1,
+    PageRecordCount: 1000,
+    UserId: parseInt(localStorage.getItem("userId") || '0', 10),
+    Data: 1,
+  };
+
+    this.dropdownData.getDropdownDataByParam<any>('SPTerm/GetSPTermListService',shippmenttermreqdto).subscribe({
+      next: res => {
+        this.shippmentTermTypeList = res.data;
+        this.loadingShippmentTerm = false;
+      },
+      error: () => {
+        this.loadingShippmentTerm = false;
+      }
+    });
   }
 
   initCustomer() {
     this.customerGuid = this.route.snapshot.paramMap.get('customerGuid');
     if (this.customerGuid) {
+      this.isEditMode = true;
       this.loadCustomerForEdit(this.customerGuid);
       this.isActiveDisabled = false;
     } else {
       this.customer.isActive= true;
       this.isActiveDisabled = true;
       this.customer.addresses = [
-        {addressGuid:null, addressType: '1', addressLine1: '', addressLine2: '', city: '',gstn:null, stateId: null, zipCode: '', countryId: null, states: [] },
-        {addressGuid:null, addressType: '2', addressLine1: '', addressLine2: '', city: '',gstn:null, stateId: null, zipCode: '', countryId: null, states: [] }
+        {addressGuid:null, addressType: '1', addressLine1: '', addressLine2: '',
+           city: '',gstn:null, stateId: null, zipCode: '', countryId: null, states: [],
+          isActive:true,createdBy:parseInt(localStorage.getItem("userId") || '0', 10),
+          createdOn:null,modifiedBy:0, modifiedOn:null,remarks:"",delMark:false },
+        {addressGuid:null, addressType: '2', addressLine1: '', addressLine2: '', city: ''
+          ,gstn:null, stateId: null, zipCode: '', countryId: null, states: [] ,
+        isActive:true,createdBy:parseInt(localStorage.getItem("userId") || '0', 10),
+          createdOn:null,modifiedBy:0, modifiedOn:null,remarks:"",delMark:false}
       ];
     }
   }
 
   loadCustomerForEdit(guid: string) {
-    const req = {mCompanyGuid:localStorage.getItem("mCompanyGuid"), CompanyId: 1, PageSize: 1, PageRecordCount: 10, UserId: parseInt(localStorage.getItem("userId") || '0', 10), Data: guid };
+    const req : CommonReqDto<string> = 
+    {
+      mCompanyGuid:localStorage.getItem("mCompanyGuid"),
+      companyGuid: localStorage.getItem("CompanyGuid"),
+      PageSize: 1, 
+      PageRecordCount: 10,
+      UserId: parseInt(localStorage.getItem("userId") || '0', 10), 
+      Data: guid 
+    };
     this.apiService.post<CommonResDto<CustomerVendorRequestDto>>('Customer/GetCustomerService', req).subscribe({
       next: res => {
         this.customer = res.data || {} as CustomerVendorRequestDto;
@@ -86,6 +154,37 @@ export class CreateCustomerComponent {
   }
 
   addAddress(type: string) {
+    let isvalid = false;
+
+    if(type=="1"){
+      const lastbillAddress = this.billAddresses?.[this.billAddresses.length - 1];
+      if(lastbillAddress){
+        if(!lastbillAddress.addressLine1 || !lastbillAddress.countryId
+          || !lastbillAddress.stateId || !lastbillAddress.gstn
+        ){
+          this.toast.warning("Please fill all required fields in the last address row before adding a new one ");
+          
+        }
+         else{
+        isvalid=true;
+      }
+      }
+    }
+    else if(type=="2"){
+       const lastbillAddress = this.billAddresses?.[this.billAddresses.length - 1];
+      if(lastbillAddress){
+        if(!lastbillAddress.addressLine1 || !lastbillAddress.countryId
+          || !lastbillAddress.stateId || !lastbillAddress.gstn
+        ){
+          this.toast.warning("Please fill all required fields in the last address row before adding a new one ");
+        }
+         else{
+        isvalid=true;
+      }
+      }
+     
+    }
+     if(isvalid==true){
     if (!this.customer.addresses) this.customer.addresses = [];
     this.customer.addresses.push({
       addressGuid: null,
@@ -97,9 +196,13 @@ export class CreateCustomerComponent {
       stateId: null,
       zipCode: '',
       countryId: null,
-      states: []
+      states: [],
+      isActive:true,createdBy:parseInt(localStorage.getItem("userId") || '0', 10),
+          createdOn:new Date(),modifiedBy:parseInt(localStorage.getItem("userId") || '0', 10),
+           modifiedOn:new Date(),remarks:"",delMark:false
     });
   }
+}
 
   removeAddressByType(type: string, index: number) {
     if (!this.customer.addresses) return;
@@ -118,12 +221,12 @@ export class CreateCustomerComponent {
       if (!keepSelected) address.stateId = null;
       return;
     }
-    const StateReqDto = {
-      CompanyId: 1,
+    const StateReqDto: CommonReqDto<number> =  {
       mCompanyGuid:localStorage.getItem("mCompanyGuid"),
+      companyGuid:localStorage.getItem("CompanyGuid"),
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      PageSize: 0,
-      PageRecordCount: 0,
+      PageSize: 1,
+      PageRecordCount: 1000,
       Data: address.countryId
     };
     this.dropdownData.getDropdownDataByParam<State>('State/GetStateDropDownService', StateReqDto)
@@ -156,12 +259,24 @@ export class CreateCustomerComponent {
   onSubmit() {
     this.customer.CustomerType="1";
     this.customer.gstn="";
-    const reqBody = {
-      CompanyId: 1,
+     this.customer.isActive= true;
+    this.customer.gsttype = this.customer.gsttype ?? "";
+    this.customer.createdBy=parseInt(localStorage.getItem("userId") || '0', 10);
+    this.customer.modifiedBy=parseInt(localStorage.getItem("userId") || '0', 10);
+    this.customer.createdOn = new Date();
+    this.customer.modifiedOn = new Date();
+    this.customer.addresses.map(address=>{
+      address.modifiedOn= new Date(),
+      address.createdOn= new Date(),
+      address.createdBy= parseInt(localStorage.getItem("userId") || '0', 10),
+      address.modifiedBy=parseInt(localStorage.getItem("userId") || '0', 10)
+    });
+    const reqBody:CommonReqDto<CustomerVendorRequestDto> = {
       mCompanyGuid:localStorage.getItem("mCompanyGuid"),
+      companyGuid:localStorage.getItem("CompanyGuid"),
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      PageSize: 0,
-      PageRecordCount: 0,
+      PageSize: 1,
+      PageRecordCount: 1000,
       Data: this.customer
     };
     this.loading = true;
@@ -182,4 +297,40 @@ export class CreateCustomerComponent {
       }
     });
   }
+copyBillingToShipping() {
+  if (this.sameAsBilling) {
+    const billingAddresses = this.customer.addresses.filter(x => x.addressType == "1");
+
+    if (billingAddresses.length === 0) {
+      this.toast.warning("Please fill at least one billing address before copying.");
+      this.sameAsBilling = false;
+      return;
+    }
+
+    const hasEmpty = billingAddresses.some(x => !x.addressLine1 || x.addressLine1.trim() === '');
+    if (hasEmpty) {
+      this.toast.warning("All billing addresses must have addressLine1 filled.");
+      this.sameAsBilling = false;
+      return;
+    }
+
+    this.customer.addresses = this.customer.addresses.filter(x => x.addressType !== "2");
+
+    const shippingAddresses = billingAddresses.map(bill => ({
+      ...JSON.parse(JSON.stringify(bill)), 
+      addressType: "2",                   
+      addressGuid: null,
+      modifiedOn: new Date()
+    }));
+
+    this.customer.addresses.push(...shippingAddresses);
+
+    shippingAddresses.forEach(addr => {
+      this.loadStatesForAddress(addr, true);
+    });
+  } else {
+    this.customer.addresses = this.customer.addresses.filter(x => x.addressType !== "2");
+  }
+}
+
 }

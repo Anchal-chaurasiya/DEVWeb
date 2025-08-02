@@ -20,6 +20,7 @@
     companyCount: number,
     isSingleUser: boolean,
     mCompanyGuid: string,
+    companyGuid:string
   }
 
   

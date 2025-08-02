@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ItemMaster } from '../../models/item.model';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
-import { CommonResDto } from '../../models/common.model';
+import { CommonReqDto, CommonResDto } from '../../models/common.model';
 
 @Component({
   selector: 'app-item',
@@ -25,16 +25,15 @@ constructor(
   ) {}
  ngOnInit() {
     this.loading = true;
-   
-    const reqData=
-    {
-      CompanyId: 1,  
-      mCompanyGuid:localStorage.getItem("mCompanyGuid"),
-      PageSize: 1,
-      PageRecordCount: 10,
-      UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      Data: 1
+    const reqData: CommonReqDto<number>= {
+            companyGuid: localStorage.getItem("CompanyGuid"),
+            mCompanyGuid: localStorage.getItem("mCompanyGuid") || null,
+            PageSize: 1,
+            PageRecordCount: 1000,
+            Data: parseInt(localStorage.getItem("userId") || '0', 10),
+            UserId: parseInt(localStorage.getItem("userId") || '0', 10),
     };
+  
     this.apiService.post<CommonResDto<ItemMaster[]>>('Item/GetItemListService', reqData).subscribe({
       next: (response) => {
         this.loading = false;

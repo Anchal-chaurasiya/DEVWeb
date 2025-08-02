@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CustomerVendorResponseDto } from '../../models/customervender.model';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
-import { CommonResDto } from '../../models/common.model';
+import { CommonReqDto, CommonResDto } from '../../models/common.model';
 
 @Component({
   selector: 'app-customer',
@@ -27,14 +27,14 @@ export class CustomerComponent {
 
   ngOnInit() {
     this.loading = true;
-    const reqData=
+    const reqData: CommonReqDto<number>=
     {
-      CompanyId: 1,  
+      companyGuid:localStorage.getItem("CompanyGuid"),
       mCompanyGuid:localStorage.getItem("mCompanyGuid"),
       PageSize: 1,
-      PageRecordCount: 10,
+      PageRecordCount: 1000,
       UserId: parseInt(localStorage.getItem("userId") || '0', 10),
-      Data: 1
+      Data: parseInt(localStorage.getItem("userId") || '0', 10),
     };
     this.apiService.post<CommonResDto<CustomerVendorResponseDto[]>>('Customer/GetCustomerListService', reqData).subscribe({
       next: (response) => {

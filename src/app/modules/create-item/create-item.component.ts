@@ -12,6 +12,8 @@ import { CommonReqDto, CommonResDto } from '../../models/common.model';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { Uom } from '../../models/uom.model';
+import { TaxMaster } from '../../models/taxmaster.model';
+import { ItemGroup } from '../../models/itemgroup.model';
 
 @Component({
   selector: 'app-create-item',
@@ -42,9 +44,18 @@ ngOnInit() {
 
     // Item Group and Tax Dropdowns
     this.loadingItemGroups = true;
-    this.dropdownData.getDropdownData<any>('ItemGroup/GetItemGroupDropdownService').subscribe({
+     const dropdownreqdto: CommonReqDto<number> = {
+        companyGuid:localStorage.getItem("CompanyGuid") || null,
+        mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
+        PageSize: 1,
+        PageRecordCount: 1000,
+        UserId:parseInt(localStorage.getItem("userId") || '0', 10),
+        Data: parseInt(localStorage.getItem("userId") || '0', 10),
+     };
+
+    this.dropdownData.getDropdownDataByParam<ItemGroup>('ItemGroup/GetItemGroupDropdownService',dropdownreqdto).subscribe({
       next: res => {
-        this.itemGroups = res;
+        this.itemGroups = res.data;
         this.loadingItemGroups = false;
         this.tryPatchItem(); 
       },
@@ -54,9 +65,10 @@ ngOnInit() {
     });
 
     this.loadingTaxes = true;
-    this.dropdownData.getDropdownData<any>('Tax/GetTaxDropdownService').subscribe({
+   
+    this.dropdownData.getDropdownDataByParam<TaxMaster>('Tax/GetTaxDropdownService', dropdownreqdto).subscribe({
       next: res => {
-        this.taxes = res;
+        this.taxes = res.data;
         this.loadingTaxes = false;
         this.tryPatchItem(); 
       },
@@ -66,18 +78,8 @@ ngOnInit() {
     });
 
     this.loadingUOM = true;
-
-     const getuomreqdto={
-        CompanyId: 1,  
-        mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
-        PageSize: 1,
-        PageRecordCount: 10,
-        UserId: localStorage.getItem("userId"),
-        Data: 1
-     }
-
-
-    this.dropdownData.getDropdownDataByParam<Uom>('UOM/BindUomDropdown', getuomreqdto).subscribe({
+    
+    this.dropdownData.getDropdownDataByParam<Uom>('UOM/BindUomDropdown', dropdownreqdto).subscribe({
         next: (res) => {
           this.loadingUOM = false;
            if (res!== null ) {
@@ -96,12 +98,12 @@ ngOnInit() {
      if(this.itemGuid){
       this.loading = true;
       this.isActiveDisabled = false;
-      const getItemReqDto={
-         CompanyId: 1,  
+      const getItemReqDto: CommonReqDto<string> = {
+        companyGuid:localStorage.getItem("CompanyGuid") || null,
         PageSize: 1,
         mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
-        PageRecordCount: 10,
-        UserId: localStorage.getItem("userId"),
+        PageRecordCount: 1000,
+        UserId: parseInt(localStorage.getItem("userId") || '0', 10),
         Data: this.itemGuid
       }
 
@@ -157,7 +159,7 @@ tryPatchItem() {
     this.item.remarks = "";
   }
   const reqBody: CommonReqDto<ItemMaster> = {
-    CompanyId: 1,
+    companyGuid:localStorage.getItem("CompanyGuid"),
     mCompanyGuid:localStorage.getItem("mCompanyGuid") || null,
     PageSize: 0,
     PageRecordCount: 0,

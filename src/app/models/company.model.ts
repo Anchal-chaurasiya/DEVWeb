@@ -34,4 +34,7 @@ export interface CompanyDto  {
   states?:State[];
   sstates?:State[];
   remarks?: string | null;
+  bStateName?:"";
+  sStateName?:string;
 }
+

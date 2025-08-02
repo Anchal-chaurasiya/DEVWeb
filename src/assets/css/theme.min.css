@@ -56,6 +56,7 @@
   --phoenix-info-text-emphasis: #005585;
   --phoenix-warning-text-emphasis: #bc3803;
   --phoenix-danger-text-emphasis: #b81800;
+  --phoenix-pay-text-emphasis: #1020e2;
   --phoenix-light-text-emphasis: #141824;
   --phoenix-dark-text-emphasis: #fff;
   --phoenix-primary-bg-subtle: #e5edff;
@@ -64,6 +65,7 @@
   --phoenix-info-bg-subtle: #c7ebff;
   --phoenix-warning-bg-subtle: #ffefca;
   --phoenix-danger-bg-subtle: #ffe0db;
+  --phoenix-pay-bg-subtle: #e5efff;
   --phoenix-light-bg-subtle: #f7f9fb;
   --phoenix-dark-bg-subtle: #9fa6bc;
   --phoenix-primary-border-subtle: #85a9ff;
@@ -72,6 +74,7 @@
   --phoenix-info-border-subtle: #60c6ff;
   --phoenix-warning-border-subtle: #ffcc85;
   --phoenix-danger-border-subtle: #f48270;
+  --phoenix-pay-border-subtle: #9f9795;
   --phoenix-light-border-subtle: #eff2f6;
   --phoenix-dark-border-subtle: #8a94ad;
   --phoenix-white-rgb: 255, 255, 255;
@@ -3352,7 +3355,7 @@ progress {
   border-color: var(--phoenix-table-border-color);
 }
 .table > :not(caption) > * > * {
-  padding: .2rem 1rem;
+  padding: 0.3rem 1rem;
   color: var(--phoenix-table-color-state, var(--phoenix-table-color-type, var(--phoenix-table-color)));
   background-color: var(--phoenix-table-bg);
   border-bottom-width: var(--phoenix-border-width);
@@ -3855,7 +3858,7 @@ textarea.form-control-lg {
 .form-check {
   display: block;
   min-height: 1.49rem;
-  padding-left: 1.5em;
+  padding-left: 1.9em;
   margin-bottom: 0.34375rem;
 }
 .form-check .form-check-input {
@@ -6219,7 +6222,7 @@ textarea.form-control-lg {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  padding: var(--phoenix-card-spacer-y) var(--phoenix-card-spacer-x);
+  padding: 1%;
   color: var(--phoenix-card-color);
 }
 
@@ -6246,7 +6249,7 @@ textarea.form-control-lg {
 }
 
 .card-header {
-  padding: var(--phoenix-card-cap-padding-y) var(--phoenix-card-cap-padding-x);
+  padding: 7px;
   margin-bottom: 0;
   color: var(--phoenix-card-cap-color);
   background-color: var(--phoenix-card-cap-bg);
@@ -11131,8 +11134,8 @@ textarea.form-control-lg {
 }
 
 .py-4 {
-  padding-top: 1.5rem !important;
-  padding-bottom: 1.5rem !important;
+  /* padding-top: 1.5rem !important; */
+  /* padding-bottom: 1.5rem !important; */
 }
 
 .py-5 {
@@ -11784,6 +11787,7 @@ textarea.form-control-lg {
 
 .text-end {
   text-align: right !important;
+  float: right;
 }
 
 .text-center {
@@ -12404,7 +12408,7 @@ textarea.form-control-lg {
 }
 
 .bg-primary {
-  --phoenix-bg-opacity: 1;
+  /* --phoenix-bg-opacity: 1; */
   background-color: rgba(var(--phoenix-primary-rgb), var(--phoenix-bg-opacity)) !important;
 }
 
@@ -12425,7 +12429,7 @@ textarea.form-control-lg {
 
 .bg-warning {
   --phoenix-bg-opacity: 1;
-  background-color: rgba(var(--phoenix-warning-rgb), var(--phoenix-bg-opacity)) !important;
+  background-color: rgb(252 244 235) !important;
 }
 
 .bg-danger {
@@ -27231,7 +27235,7 @@ html[dir=rtl] .googlemap .gm-style-iw.gm-style-iw-c button[title=Close] {
 
 .border-warning {
   --phoenix-border-opacity: 1;
-  border-color: rgba(var(--phoenix-warning-rgb), var(--phoenix-border-opacity)) !important;
+  /* border-color: rgb(208 201 193) !important; */
 }
 
 .border-danger {
@@ -32983,6 +32987,8 @@ a[href].bg-body-secondary:hover, a[href].bg-body-secondary:focus {
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
   line-height: 1;
+  white-space: nowrap;
+  font-size: small;
 }
 .table > thead > tr > th:last-child {
   padding-right: 0;
@@ -33200,6 +33206,13 @@ a[href].bg-body-secondary:hover, a[href].bg-body-secondary:focus {
   --phoenix-badge-border-color: var(--phoenix-danger-border-subtle);
 }
 
+.badge-phoenix-pay {
+  --phoenix-badge-bg: var(--phoenix-pay-bg-subtle);
+  --phoenix-badge-color: var(--phoenix-pay-text-emphasis);
+  --phoenix-badge-border-color: var(--phoenix-pay-border-subtle);
+  height: 23px;
+}
+
 .badge-phoenix-light {
   --phoenix-badge-bg: var(--phoenix-light-bg-subtle);
   --phoenix-badge-color: var(--phoenix-light-text-emphasis);
@@ -33229,6 +33242,10 @@ a[href].bg-body-secondary:hover, a[href].bg-body-secondary:focus {
 }
 
 .badge-phoenix-danger[href]:hover, .badge-phoenix-danger[href]:focus {
+  color: #f48270;
+}
+
+.badge-phoenix-pay[href]:hover, .badge-phoenix-pay[href]:focus {
   color: #f48270;
 }
 
@@ -38289,4 +38306,50 @@ top: 100%;
 .custom-ng-select .ng-option-selected {
   background: #e7f1ff;
   color: #0d6efd;
+}
+.company-text {
+  font-size: 1rem;
+  color: rgb(27 31 33);
+  margin-bottom: 0;
+}
+/* Make ng-select dropdown appear above all other elements */
+.ng-dropdown-panel {
+  z-index: 999999 !important;
+}
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.custom-modal {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.custom-modal-header,
+.custom-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-modal-body textarea {
+  width: 100%;
+  padding: 0.5rem;
+  resize: none;
+}
+
+td{
+  font-size: smaller !important;
 }
