@@ -8,8 +8,9 @@
 }
 
  export interface CommonResDto<T>{
-    PageSize: number;
-    PageRecordCount: number;
+    pageSize: number;
+    pageRecordCount: number;
+    totalRecordCount:number;
     UserId:number;
     data: T;
     message: string;

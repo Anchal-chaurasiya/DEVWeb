@@ -21,9 +21,9 @@
           <div class="col-auto">
             <div class="d-md-flex justify-content-between">
               <div>
-                <a [routerLink]="'/create-purchase-order'"
+                <a [routerLink]="'/create-sales-order'"
                   ><button class="btn btn-primary me-4">
-                    <span class="fas fa-plus me-2"></span>Create Purchase Order
+                    <span class="fas fa-plus me-2"></span>Create Sales Order
                   </button></a
                 ><button class="btn btn-link text-body px-0">
                   <span class="fa-solid fa-file-export fs-9 me-2"></span>Export
@@ -61,7 +61,7 @@
                 >
                   Order No
                 </th>
-                <th>Vendor</th>
+                <th>Customer</th>
                 <th>Refrence No</th>
                 <th>Total Amt</th>
                 <th>Paid Amt</th>
@@ -73,15 +73,9 @@
               </tr>
             </thead>
             <tbody class="list" id="leal-tables-body">
-              <tr *ngFor="let item of purchaseOrderlist; index as i">
-                <!-- <td
-                  class="order align-middle white-space-nowrap py-0"
-                  style="width: 10%"
-                >
-                  <a class="fw-semibold">{{ i + 1 }}</a>
-                </td> -->
+              <tr *ngFor="let item of salesOrderlist; index as i">
                 <td class="order align-middle white-space-nowrap py-0">
-                  <a class="fw-semibold"> #{{ item.purchaseOrderNo }}</a>
+                  <a class="fw-semibold"> #{{ item.sellOrderNo }}</a>
                 </td>
                 <td>
                   {{ item.customerName }}<br />
@@ -109,7 +103,7 @@
                       class="badge badge-phoenix fs-10 badge-phoenix-pay"
                       data-bs-toggle="modal"
                       data-bs-target="#paymentModal"
-                      (click)="openPaymentModal(item.purchaseGuid)"
+                      (click)="openPaymentModal(item.sellGuid)"
                     >
                       Click to Pay
                     </button>
@@ -135,7 +129,7 @@
                       style="height: 30px"
                       class="badge badge-phoenix fs-10 badge-phoenix-warning"
                       data-bs-toggle="modal"
-                      (click)="openCancelModel(item.purchaseGuid)"
+                      (click)="openCancelModel(item.sellGuid)"
                       data-bs-target="#cancelModal"
                     >
                       Click to Cancel
@@ -146,7 +140,7 @@
                 <td class="Action" style="width: 10px">
                   <div class="d-flex justify-content-end align-items-center">
                     <a
-                      [routerLink]="['/view-purchase-order', item.purchaseGuid]"
+                      [routerLink]="['/view-sales-order', item.sellGuid]"
                       class="btn btn-sm btn-phoenix-secondary me-2"
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
@@ -156,7 +150,7 @@
                   </div>
                 </td>
               </tr>
-              <tr *ngIf="!purchaseOrderlist.length && !loading">
+              <tr *ngIf="!salesOrderlist.length && !loading">
                 <td colspan="4" class="text-center">No records found.</td>
               </tr>
             </tbody>
@@ -329,7 +323,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let pay of paypurchaseOrder; let j = index">
+                      <tr *ngFor="let pay of paysalesOrder; let j = index">
                         <td>
                           <select
                             class="form-select"
@@ -366,7 +360,7 @@
                           <button
                             type="button"
                             (click)="removePayment(j)"
-                            [disabled]="paypurchaseOrder.length === 1"
+                            [disabled]="paysalesOrder.length === 1"
                             title="Remove"
                             class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
                           >
@@ -494,7 +488,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="cancelModalLabel">
-              Cancel Purchase Order
+              Cancel Sales Order
             </h5>
             <button
               type="button"
@@ -510,7 +504,7 @@
               required
               placeholder="Enter Remarks"
               rows="6"
-              [(ngModel)]="cancelPurchaseOrder.cancelRemark"
+              [(ngModel)]="cancelSalesOrder.cancelRemark"
             ></textarea>
           </div>
           <div class="modal-footer">

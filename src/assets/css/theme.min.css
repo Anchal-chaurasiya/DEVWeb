@@ -1104,7 +1104,7 @@ td,
 th {
   border-color: inherit;
   border-style: solid;
-  border-width: 0;
+  border-width: .1px;
 }
 
 label {
@@ -1711,12 +1711,12 @@ progress {
 
 .g-4,
 .gx-4 {
-  --phoenix-gutter-x: 1.5rem;
+  --phoenix-gutter-x: 0.5rem;
 }
 
 .g-4,
 .gy-4 {
-  --phoenix-gutter-y: 1.5rem;
+  --phoenix-gutter-y: 0rem;
 }
 
 .g-5,
@@ -3355,12 +3355,12 @@ progress {
   border-color: var(--phoenix-table-border-color);
 }
 .table > :not(caption) > * > * {
-  padding: 0.3rem 1rem;
+  padding: 0.3rem 0.4rem;
   color: var(--phoenix-table-color-state, var(--phoenix-table-color-type, var(--phoenix-table-color)));
   background-color: var(--phoenix-table-bg);
   border-bottom-width: var(--phoenix-border-width);
   -webkit-box-shadow: inset 0 0 0 9999px var(--phoenix-table-bg-state, var(--phoenix-table-bg-type, var(--phoenix-table-accent-bg)));
-  box-shadow: inset 0 0 0 9999px var(--phoenix-table-bg-state, var(--phoenix-table-bg-type, var(--phoenix-table-accent-bg)));
+  /* box-shadow: inset 0 0 0 9999px var(--phoenix-table-bg-state, var(--phoenix-table-bg-type, var(--phoenix-table-accent-bg))); */
 }
 .table > tbody {
   vertical-align: inherit;
@@ -24016,7 +24016,7 @@ fieldset:disabled .table-list .page,
 /* -------------------------------------------------------------------------- */
 .content {
   min-height: 100vh;
-  padding: calc(var(--phoenix-navbar-top-height) + 2rem) 1.5rem 6.375rem 1.5rem;
+  padding: calc(var(--phoenix-navbar-top-height) + 2rem) 0.5rem 0.375rem 1.5rem;
   position: relative;
   padding-bottom: 6rem;
 }
@@ -38264,8 +38264,8 @@ a[href].bg-body-secondary:hover, a[href].bg-body-secondary:focus {
 }
 
 .content {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
+  /* padding-left: 2.5rem; */
+  padding-right: 1rem;
   margin-left: 11.875rem;
 }
 .dropdown-menu .dropdown-menu-end .navbar-dropdown-caret{
@@ -38352,4 +38352,7 @@ top: 100%;
 
 td{
   font-size: smaller !important;
+}
+.mtop-4{
+  margin-top:-4rem;
 }

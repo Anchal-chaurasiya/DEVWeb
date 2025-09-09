@@ -16,6 +16,10 @@ import { CreateCompanyComponent } from './modules/create-company/create-company.
 import { CreatePurchaseOrderComponent } from './transactionmodule/create-purchase-order/create-purchase-order.component';
 import { PurchaseOrderComponent } from './transactionmodule/purchase-order/purchase-order.component';
 import { ViewPurchaseOrderComponent } from './transactionmodule/view-purchase-order/view-purchase-order.component';
+import { SalesOrderComponent } from './transactionmodule/sales-order/sales-order.component';
+import { CreateSalesOrderComponent } from './transactionmodule/create-sales-order/create-sales-order.component';
+import { ViewSalesOrderComponent } from './transactionmodule/view-sales-order/view-sales-order.component';
+import { GenerateInvoiceComponent } from './transactionmodule/generate-invoice/generate-invoice.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -41,4 +45,8 @@ export const routes: Routes = [
   { path: 'purchase-order',component: PurchaseOrderComponent},
   { path: 'create-purchase-order',component: CreatePurchaseOrderComponent},
   { path: 'view-purchase-order/:purchaseGuid',component: ViewPurchaseOrderComponent},
+  { path: 'sales-order',component: SalesOrderComponent},
+  { path: 'create-sales-order',component: CreateSalesOrderComponent},
+  { path: 'view-sales-order/:sellGuid',component: ViewSalesOrderComponent},
+  { path: 'generate-invoice', component:GenerateInvoiceComponent}
 ];

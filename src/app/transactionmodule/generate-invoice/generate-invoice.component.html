@@ -1,0 +1,612 @@
+<main class="main" id="top">
+  <app-navbar></app-navbar>
+  <div class="content">
+    <div *ngIf="loading" class="loader-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div class="">
+      <div class="card shadow-lg border-0 mb-4">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h4 class="mb-0">
+            <i class="bi bi-cart-plus me-2"></i>
+            Generate Invoice
+          </h4>
+        </div>
+        <div class="card-body">
+          <form
+            class="row g-4"
+            #salesOrderForm="ngForm"
+            (ngSubmit)="generateInvoice()"
+          >
+            <div class="col-md-3">
+              <label class="form-label" for="InoviceNo">Invoice No</label>
+              <input
+                class="form-control"
+                name="InoviceNo"
+                [(ngModel)]="invoice.invoiceNumber"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Invoice Date</label>
+              <input
+                class="form-control"
+                type="date"
+                name="invoiceDate"
+                [(ngModel)]="invoice.invoiceDate"
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Delivery Note</label>
+              <input
+                class="form-control"
+                name="deliverynote"
+                [(ngModel)]="invoice.deliveryNote"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Reference No</label>
+              <input
+                class="form-control"
+                name="refrenceNo"
+                [(ngModel)]="invoice.referenceNo"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label fw-bold" for="referencedate">
+                <i class="bi bi-calendar-date me-1"></i>Reference Date
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                name="referencedate"
+                id="referencedate"
+                [(ngModel)]="invoice.referenceDate"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="addressId">Buyer's Order No</label>
+              <input
+                class="form-control"
+                name="buyersorderno"
+                type="text"
+                [(ngModel)]="invoice.buyersorderno"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Dispatch Doc No</label>
+              <input
+                class="form-control"
+                name="dispatchDocNo"
+                type="text"
+                [(ngModel)]="invoice.dispatchDocNo"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="shippingaddress"
+                >Consignee (Shipping Address)</label
+              >
+
+              <input
+                class="form-control"
+                name="shippingaddress"
+                type="text"
+                [(ngModel)]="invoice.consigneeaddress"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="shippingaddress"
+                >Consignee Mobile No</label
+              >
+
+              <input
+                class="form-control"
+                name="consigneemobileno"
+                type="text"
+                [(ngModel)]="invoice.consigneemobileno"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="shippingaddress"
+                >Consignee GSTIN
+              </label>
+
+              <input
+                class="form-control"
+                name="consigneegstno"
+                type="text"
+                [(ngModel)]="invoice.consigneegstno"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="shippingaddress"
+                >Consignee State
+              </label>
+
+              <input
+                class="form-control"
+                name="consigneestate"
+                type="text"
+                [(ngModel)]="invoice.consigneestate"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="billingAddress"
+                >Buyer (Bill to)</label
+              >
+
+              <input
+                class="form-control"
+                name="billingAddress"
+                type="text"
+                [(ngModel)]="invoice.buyeraddress"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="billingAddress"
+                >Buyer Mobile No</label
+              >
+
+              <input
+                class="form-control"
+                name="buyermobileno"
+                type="text"
+                [(ngModel)]="invoice.buyermobileno"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="buyergstno">Buyer GSTIN</label>
+
+              <input
+                class="form-control"
+                name="buyergstn"
+                type="text"
+                [(ngModel)]="invoice.buyergstno"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label" for="buyerstate">Buyer State</label>
+
+              <input
+                class="form-control"
+                name="buyerstate"
+                type="text"
+                [(ngModel)]="invoice.buyerstate"
+              />
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-check mt-4">
+                <input
+                  [(ngModel)]="isIntraState"
+                  (ngModelChange)="onIgstChange()"
+                  type="checkbox"
+                  id="igstapply"
+                  name="igstapply"
+                  class="form-check-input"
+                /><label for="igstapply" class="form-check-label">
+                  ISGT Apply
+                </label>
+              </div>
+            </div>
+
+            <!-- Items Card -->
+            <div class="col-12">
+              <div class="card mb-3">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <span><i class="bi bi-box-seam me-2"></i>Items</span>
+                  <button
+                    type="button"
+                    class="btn btn-primary me-4"
+                    (click)="addItem()"
+                  >
+                    <svg
+                      class="svg-inline--fa fa-plus me-2"
+                      aria-hidden="true"
+                      focusable="false"
+                      data-prefix="fas"
+                      data-icon="plus"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="card-body p-2">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Item Description</th>
+                          <th>HSN</th>
+                          <th>Quantity</th>
+                          <th>Price</th>
+                          <th>Amount</th>
+
+                          <!-- <th>Discount (%)</th>
+                          <th>Discount Amt</th> -->
+                          <th *ngIf="!isIntraState">CGST Rate</th>
+                          <th *ngIf="!isIntraState">CGST Amt</th>
+                          <th *ngIf="!isIntraState">SGST Rate</th>
+                          <th *ngIf="!isIntraState">SGST Amt</th>
+
+                          <!-- Show IGST only if inter-state -->
+                          <th *ngIf="isIntraState">IGST Rate</th>
+                          <th *ngIf="isIntraState">IGST Amt</th>
+                          <th>Total Tax Amt</th>
+
+                          <th>Total Amount</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of invoice.items; let i = index">
+                          <td>
+                            <input
+                              style="width: 140px"
+                              type="text"
+                              class="form-control"
+                              name="itemdescription{{ i }}"
+                              [(ngModel)]="item.description"
+                            />
+                          </td>
+
+                          <td>
+                            <input
+                              style="width: 140px"
+                              type="text"
+                              class="form-control"
+                              name="hsn{{ i }}"
+                              [(ngModel)]="item.hsn"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              style="width: 64px"
+                              type="number"
+                              class="form-control"
+                              name="itemQty{{ i }}"
+                              required
+                              min="1"
+                              [(ngModel)]="item.qty"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control"
+                              style="width: 100px"
+                              [(ngModel)]="item.rate"
+                              name="itemPrice{{ i }}"
+                              required
+                              min="0"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <!-- <td>
+                            <input
+                              type="number"
+                              class="form-control"
+                              style="width: 64px"
+                              [(ngModel)]="item.discountPercentage"
+                              name="itemDiscountPercent{{ i }}"
+                              min="0"
+                              max="100"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              style="width: 64px"
+                              class="form-control bg-light"
+                              [value]="item.discountAmount"
+                              name="itemDiscountAmt{{ i }}"
+                              readonly
+                            />
+                          </td> -->
+
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.amount"
+                              style="width: 100px"
+                              name="itemAmount{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <td *ngIf="!isIntraState">
+                            <input
+                              style="width: 64px"
+                              type="number"
+                              class="form-control"
+                              [(ngModel)]="item.cgstRate"
+                              name="itemCgstRate{{ i }}"
+                              min="0"
+                              max="100"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td *ngIf="!isIntraState">
+                            <input
+                              style="width: 80px"
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.cgstAmount"
+                              name="itemCgstAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <td *ngIf="!isIntraState">
+                            <input
+                              type="number"
+                              style="width: 64px"
+                              class="form-control"
+                              [(ngModel)]="item.sgstRate"
+                              name="itemSgstRate{{ i }}"
+                              min="0"
+                              max="100"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td *ngIf="!isIntraState">
+                            <input
+                              type="number"
+                              style="width: 80px"
+                              class="form-control bg-light"
+                              [value]="item.sgstAmount"
+                              name="itemSgstAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <td *ngIf="isIntraState">
+                            <input
+                              type="number"
+                              class="form-control"
+                              [(ngModel)]="item.igstRate"
+                              name="itemIgstRate{{ i }}"
+                              min="0"
+                              max="100"
+                              style="width: 64px"
+                              (input)="updateAmount(i)"
+                            />
+                          </td>
+                          <td *ngIf="isIntraState">
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.igstAmount"
+                              style="width: 80px"
+                              name="itemIgstAmt{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.totaltaxamount"
+                              style="width: 80px"
+                              name="itemtaxamount{{ i }}"
+                              readonly
+                            />
+                          </td>
+
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control bg-light"
+                              [value]="item.totalAmount"
+                              style="width: 100px"
+                              name="itemTotalAmount{{ i }}"
+                              readonly
+                            />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              (click)="removeItem(i)"
+                              [disabled]="invoice.items.length === 1"
+                              title="Remove"
+                              class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                focusable="false"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 448 512"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
+                                ></path>
+                              </svg>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="col-md-4 offset-md-8">
+              <div class="card mb-3 shadow-sm">
+                <div
+                  class="card-header bg-warning text-dark d-flex align-items-center"
+                >
+                  <i class="bi bi-receipt me-2 fs-5"></i>
+                  <span class="fw-bold fs-8">Order Summary</span>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex">
+                    <table class="table table-bordered mb-0">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <i class="bi bi-box me-1 text-info"></i>
+                            <strong>Total Items:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-info fs-8 px-2">{{
+                              invoice.items.length
+                            }}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <i
+                              class="bi bi-currency-rupee me-1 text-success"
+                            ></i>
+                            <strong>Sub Total:</strong>
+                          </td>
+                          <td>₹ {{ invoice.subtotal }}</td>
+                        </tr>
+                        <tr *ngIf="!isIntraState">
+                          <td>
+                            <i class="bi bi-credit-card me-1 text-primary"></i>
+                            <strong>CGST Amount:</strong>
+                          </td>
+                          <td>₹ {{ invoice.t_cgstamount }}</td>
+                        </tr>
+
+                        <tr *ngIf="!isIntraState">
+                          <td>
+                            <i class="bi bi-credit-card me-1 text-primary"></i>
+                            <strong>SGST Amount:</strong>
+                          </td>
+                          <td>₹ {{ invoice.t_sgstamount }}</td>
+                        </tr>
+
+                        <tr *ngIf="isIntraState">
+                          <td>
+                            <i class="bi bi-credit-card me-1 text-primary"></i>
+                            <strong>IGST Amount:</strong>
+                          </td>
+                          <td>₹ {{ invoice.t_igstamount }}</td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                            <i class="bi bi-credit-card me-1 text-primary"></i>
+                            <strong>Total Amount:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-success fs-8 px-2"
+                              >₹ {{ invoice.aftertaxamounttotal }}</span
+                            >
+                          </td>
+                        </tr>
+
+                        <!-- <tr *ngIf="totalPaid < salesOrder.totalAmount">
+                          <td>
+                            <i
+                              class="bi bi-exclamation-triangle me-1 text-warning"
+                            ></i>
+                            <strong>Due:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-warning text-dark px-3 py-2"
+                              >₹ {{ salesOrder.totalAmount - totalPaid }}</span
+                            >
+                          </td>
+                        </tr> -->
+                        <!-- <tr *ngIf="totalPaid > salesOrder.totalAmount">
+                          <td>
+                            <i class="bi bi-check-circle me-1 text-success"></i>
+                            <strong>Status:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-danger px-3 py-2"
+                              >Extra Amount Paid</span
+                            >
+                          </td>
+                        </tr> -->
+                        <!-- <tr
+                          *ngIf="
+                            totalPaid == salesOrder.totalAmount && totalPaid > 0
+                          "
+                        >
+                          <td>
+                            <i class="bi bi-check-circle me-1 text-success"></i>
+                            <strong>Status:</strong>
+                          </td>
+                          <td>
+                            <span class="badge bg-success px-3 py-2"
+                              >Total Amount Paid</span
+                            >
+                          </td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="col-12">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="loading"
+              >
+                <span
+                  *ngIf="loading"
+                  class="spinner-border spinner-border-sm me-2"
+                ></span>
+                Submit
+              </button>
+
+              <!-- <button
+                class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0 ml-2"
+                type="button"
+                [routerLink]="['/purchase-order']"
+              >
+                Cancel
+              </button> -->
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <app-footer></app-footer>
+    </div>
+  </div>
+</main>

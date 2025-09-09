@@ -1,37 +1,37 @@
 <main class="main" id="top">
   <app-navbar></app-navbar>
   <div class="content">
-    <div>
+    <div class="">
       <div class="card shadow-lg border-0 mb-4">
         <div
           class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
         >
           <h4 class="mb-0">
             <i class="bi bi-cart-plus me-2"></i>
-            Create Purchase Order
+            Create Sales Order
           </h4>
           <span class="badge bg-light text-primary fs-8 px-3 py-2">
-            PO #{{ purchaseOrder.purchaseOrderNo || "New" }}
+            SO #{{ salesOrder.sellOrderNo || "New" }}
           </span>
         </div>
         <div class="card-body">
           <form
             class="row g-4"
-            #purchaseorderForm="ngForm"
+            #salesOrderForm="ngForm"
             (ngSubmit)="onSubmit()"
           >
             <div class="col-md-3">
-              <label class="form-label" for="vendorId">Vendor</label>
+              <label class="form-label" for="customerId">Customer</label>
 
               <select
                 class="form-select"
-                [(ngModel)]="purchaseOrder.vendorGuid"
-                name="vendorGuid"
-                (ngModelChange)="onVendorChange($event)"
+                [(ngModel)]="salesOrder.customerGuid"
+                name="customerGuid"
+                (ngModelChange)="onCustomerChange($event)"
                 required
               >
                 <option value="" disabled>Select</option>
-                <option *ngFor="let c of vendorList" [value]="c.customerGuid">
+                <option *ngFor="let c of customerList" [value]="c.customerGuid">
                   {{ c.customerName }}
                 </option>
               </select>
@@ -42,7 +42,7 @@
               <input
                 class="form-control"
                 name="contactPersonName"
-                [(ngModel)]="purchaseOrder.contactPersonName"
+                [(ngModel)]="salesOrder.contactPersonName"
                 disabled
               />
             </div>
@@ -51,7 +51,7 @@
               <input
                 class="form-control"
                 name="contachPersonNo"
-                [(ngModel)]="purchaseOrder.contachPersonNo"
+                [(ngModel)]="salesOrder.contachPersonNo"
                 disabled
               />
             </div>
@@ -60,7 +60,7 @@
               <input
                 class="form-control"
                 name="contachPersonEmail"
-                [(ngModel)]="purchaseOrder.contachPersonEmail"
+                [(ngModel)]="salesOrder.contachPersonEmail"
                 disabled
               />
             </div>
@@ -69,7 +69,7 @@
               <input
                 class="form-control"
                 name="refNo"
-                [(ngModel)]="purchaseOrder.refNo"
+                [(ngModel)]="salesOrder.refNo"
               />
             </div>
             <div class="col-md-3">
@@ -78,19 +78,19 @@
                 class="form-control"
                 name="placeOfSupply"
                 disabled
-                [(ngModel)]="purchaseOrder.placeOfSupply"
+                [(ngModel)]="salesOrder.placeOfSupply"
               />
             </div>
             <div class="col-md-3">
-              <label class="form-label fw-bold" for="purchaseOrderDate">
-                <i class="bi bi-calendar-date me-1"></i>Purchase Order Date
+              <label class="form-label fw-bold" for="salesOrderDate">
+                <i class="bi bi-calendar-date me-1"></i>Sales Order Date
               </label>
               <input
                 type="date"
                 class="form-control"
-                [(ngModel)]="purchaseOrder.purchaseOrderDate"
-                name="purchaseOrderDate"
-                id="purchaseOrderDate"
+                [(ngModel)]="salesOrder.sellOrderDate"
+                name="salesOrderDate"
+                id="salesOrderDate"
                 required
               />
             </div>
@@ -102,7 +102,7 @@
               <input
                 type="date"
                 class="form-control"
-                [(ngModel)]="purchaseOrder.deliveryDate"
+                [(ngModel)]="salesOrder.deliveryDate"
                 name="deliveryDate"
                 id="deliveryDate"
                 required
@@ -113,7 +113,7 @@
               <label class="form-label">Shipping Term</label>
               <input
                 class="form-control"
-                [value]="selectedVendor?.shippingTerm"
+                [value]="selectedCustomer?.shippingTerm"
                 readonly
               />
             </div>
@@ -122,18 +122,8 @@
               <label class="form-label">Payment Term</label>
               <input
                 class="form-control"
-                [value]="selectedVendor?.paymentTerm"
+                [value]="selectedCustomer?.paymentTerm"
                 readonly
-              />
-            </div>
-
-            <div class="col-md-3">
-              <label class="form-label">Address</label>
-              <input
-                class="form-control"
-                name="address"
-                [value]="this.vendoraddress ?? ''"
-                disabled
               />
             </div>
 
@@ -141,42 +131,51 @@
               <label class="form-label" for="addressId">Billing Address</label>
               <select
                 class="form-select"
-                [(ngModel)]="purchaseOrder.addressId"
+                [(ngModel)]="salesOrder.addressId"
                 name="addressId"
                 (ngModelChange)="onAddressChange($event)"
                 required
               >
-                <!-- <option value="" disabled>Select</option> -->
                 <option
-                  *ngFor="let a of billingCompanyAddressList"
+                  *ngFor="let a of billingAddressList"
                   [value]="a.addressId"
-                  selected
                 >
                   {{ a.address }}
                 </option>
               </select>
             </div>
+
             <div class="col-md-3">
-              <label class="form-label">Company Shipping Address</label>
-              <input
-                class="form-control"
-                name="companySAddressname"
-                [value]="this.companySAddressname ?? ''"
-                disabled
-              />
+              <label class="form-label" for="saddressId"
+                >Shipping Address</label
+              >
+              <select
+                class="form-select"
+                [(ngModel)]="salesOrder.sAddressId"
+                name="saddressId"
+                (ngModelChange)="onShippingAddressChange($event)"
+                required
+              >
+                <option
+                  *ngFor="let a of ShipingAddressList"
+                  [value]="a.addressId"
+                >
+                  {{ a.address }}
+                </option>
+              </select>
             </div>
 
             <div class="col-md-3">
-              <label class="form-label">Purchase Type</label>
+              <label class="form-label">Sales Type</label>
               <div class="mb-3 d-flex gap-4">
                 <div class="form-check">
                   <input
                     class="form-check-input"
                     type="radio"
                     name="purchaseType"
-                    [(ngModel)]="purchaseOrder.purchaseType"
-                    (change)="onPurchaseTypeChange(purchaseOrder)"
-                    (mousedown)="onRadioMouseDown(purchaseOrder)"
+                    [(ngModel)]="salesOrder.sellType"
+                    (change)="onSellTypeChange(salesOrder)"
+                    (mousedown)="onRadioMouseDown(salesOrder)"
                     id="item"
                     value="Item"
                   />
@@ -194,9 +193,9 @@
                     class="form-check-input"
                     type="radio"
                     name="purchaseType"
-                    (change)="onPurchaseTypeChange(purchaseOrder)"
-                    [(ngModel)]="purchaseOrder.purchaseType"
-                    (mousedown)="onRadioMouseDown(purchaseOrder)"
+                    (change)="onSellTypeChange(salesOrder)"
+                    [(ngModel)]="salesOrder.sellType"
+                    (mousedown)="onRadioMouseDown(salesOrder)"
                     id="service"
                     value="Service"
                   />
@@ -247,13 +246,13 @@
                         <tr>
                           <th
                             *ngIf="
-                              purchaseOrder.purchaseType == 'Item' ||
-                              purchaseOrder.purchaseType == ''
+                              salesOrder.sellType == 'Item' ||
+                              salesOrder.sellType == ''
                             "
                           >
                             Item Name
                           </th>
-                          <th *ngIf="purchaseOrder.purchaseType == 'Service'">
+                          <th *ngIf="salesOrder.sellType == 'Service'">
                             Item Description
                           </th>
                           <th>Quantity</th>
@@ -275,14 +274,14 @@
                       <tbody>
                         <tr
                           *ngFor="
-                            let item of purchaseOrder.purchaseOrderDetailReqDtos;
+                            let item of salesOrder.sellOrderDetailReqDtos;
                             let i = index
                           "
                         >
                           <td
                             *ngIf="
-                              purchaseOrder.purchaseType == 'Item' ||
-                              purchaseOrder.purchaseType == ''
+                              salesOrder.sellType == 'Item' ||
+                              salesOrder.sellType == ''
                             "
                           >
                             <select
@@ -303,7 +302,7 @@
                             </select>
                           </td>
 
-                          <td *ngIf="purchaseOrder.purchaseType == 'Service'">
+                          <td *ngIf="salesOrder.sellType == 'Service'">
                             <input
                               style="width: 140px"
                               type="text"
@@ -382,7 +381,6 @@
                             />
                           </td>
 
-                          <!-- SGST fields (show only for intra-state) -->
                           <td *ngIf="isIntraState">
                             <input
                               type="number"
@@ -407,7 +405,6 @@
                             />
                           </td>
 
-                          <!-- IGST fields (show only for inter-state) -->
                           <td *ngIf="!isIntraState">
                             <input
                               type="number"
@@ -445,8 +442,7 @@
                             <button
                               type="button"
                               [disabled]="
-                                purchaseOrder.purchaseOrderDetailReqDtos
-                                  .length === 1
+                                salesOrder.sellOrderDetailReqDtos.length === 1
                               "
                               title="Remove"
                               class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
@@ -519,7 +515,7 @@
                     <tbody>
                       <tr
                         *ngFor="
-                          let pay of purchaseOrder.purchaseOrderPaymentReqDtos;
+                          let pay of salesOrder.sellOrderPaymentReqDtos;
                           let j = index
                         "
                       >
@@ -560,8 +556,7 @@
                             type="button"
                             (click)="removePayment(j)"
                             [disabled]="
-                              purchaseOrder.purchaseOrderPaymentReqDtos
-                                .length === 1
+                              salesOrder.sellOrderPaymentReqDtos.length === 1
                             "
                             title="Remove"
                             class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"
@@ -607,7 +602,7 @@
                           </td>
                           <td>
                             <span class="badge bg-info fs-8 px-2">{{
-                              purchaseOrder.purchaseOrderDetailReqDtos.length
+                              salesOrder.sellOrderDetailReqDtos.length
                             }}</span>
                           </td>
                         </tr>
@@ -620,7 +615,7 @@
                           </td>
                           <td>
                             <span class="badge bg-success fs-8 px-2"
-                              >₹ {{ purchaseOrder.totalAmount }}</span
+                              >₹ {{ salesOrder.totalAmount }}</span
                             >
                           </td>
                         </tr>
@@ -635,7 +630,7 @@
                             >
                           </td>
                         </tr>
-                        <tr *ngIf="totalPaid < purchaseOrder.totalAmount">
+                        <tr *ngIf="totalPaid < salesOrder.totalAmount">
                           <td>
                             <i
                               class="bi bi-exclamation-triangle me-1 text-warning"
@@ -644,12 +639,11 @@
                           </td>
                           <td>
                             <span class="badge bg-warning text-dark px-3 py-2"
-                              >₹
-                              {{ purchaseOrder.totalAmount - totalPaid }}</span
+                              >₹ {{ salesOrder.totalAmount - totalPaid }}</span
                             >
                           </td>
                         </tr>
-                        <tr *ngIf="totalPaid > purchaseOrder.totalAmount">
+                        <tr *ngIf="totalPaid > salesOrder.totalAmount">
                           <td>
                             <i class="bi bi-check-circle me-1 text-success"></i>
                             <strong>Status:</strong>
@@ -662,8 +656,7 @@
                         </tr>
                         <tr
                           *ngIf="
-                            totalPaid == purchaseOrder.totalAmount &&
-                            totalPaid > 0
+                            totalPaid == salesOrder.totalAmount && totalPaid > 0
                           "
                         >
                           <td>
@@ -703,9 +696,6 @@
               >
                 Cancel
               </button>
-
-              <!-- <button type="submit" class="btn btn-primary">Submit</button>
-              <button type="submit" class="btn btn-primary">Submit</button> -->
             </div>
           </form>
         </div>
